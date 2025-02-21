@@ -1,10 +1,24 @@
 ## What is this Ansible Playbook for Gluster
-It is Ansible Playbook to deploy oVirt for CentOS 9.x. The purpose of this is only for development environment not production.
+It is Ansible Playbook to deploy Gluster with many services such as GlusterFS/NFS Ganesha/Samba for CentOS 9.x.
+The purpose of this is only for development environment not production.
 
 ## What is Gluster?
+Gluster is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.
+### Advantages
+- Scales to several petabytes
+- Handles thousands of clients
+- POSIX compatible
+- Uses commodity hardware
+- Can use any ondisk filesystem that supports extended attributes
+- Accessible using industry standard protocols like NFS and SMB
+- Provides replication, quotas, geo-replication, snapshots and bitrot detection
+- Allows optimization for different workloads
+- Open Source
 
 ## Gluster Architecture
-![alt text](https://raw.githubusercontent.com/rokmc756/ovirt/main/roles/ovirt/images/ovirt-architecture.png)
+![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_diagram.png)
+![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster-file-system-architecture.png)
+![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_storage_architecture.png)
 
 
 ## Supported Platform and OS
