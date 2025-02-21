@@ -16,10 +16,12 @@ Gluster is a scalable, distributed file system that aggregates disk storage reso
 - Open Source
 
 ## Gluster Architecture
-![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_diagram.png)
-![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster-file-system-architecture.png)
+### Storage Architecture
 ![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_storage_architecture.png)
-
+### Scale Up and Out Diagram
+![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_diagram.png)
+### Internal Flow
+![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster-file-system-architecture.png)
 
 ## Supported Platform and OS
 Virtual Machines\
