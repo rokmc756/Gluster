@@ -1,0 +1,28 @@
+---
+- name: Copy Gluster NFS Ganesha Config
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/ganesha/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  register: copy_gluster_nfs_ganesha_conf
+  with_items:
+    - "ganesha.conf"
+- debug: msg={{ copy_gluster_nfs_ganesha_conf }}
+
+
+- name: Start and Enable NFS Ganesha
+  systemd:
+    name: nfs-ganesha
+    state: started
+    enabled: yes
+
+
+- name: Verify Export List
+  shell: |
+     showmount -e localhost
+  register: verify_export_list
+- debug: msg={{ verify_export_list }}
+  when: print_debug == true
+

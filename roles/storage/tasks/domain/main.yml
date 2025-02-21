@@ -1,0 +1,15 @@
+---
+- name: Import NFS Storage Domain Playbook
+  import_tasks: domain/nfs/main.yml
+  when: ( nfs is defined and nfs == true )
+
+
+- name: Import iSCSI Storage Domain Playbook
+  import_tasks: domain/iscsi/main.yml
+  when: ( iscsi is defined and iscsi == true )
+
+
+- name: Import Local Storage Domain Playbook
+  import_tasks: domain/local/main.yml
+  when: ( local is defined and local == true )
+

@@ -1,0 +1,12 @@
+---
+- name: Add Local Storage Domain
+  import_tasks: domain/local/setup-local-storage.yml
+  tags: add, setup, install
+  when: inventory_hostname in groups['engine']
+
+
+- name: Remove Local Storage Domain
+  import_tasks: domain/local/remove-local-storage.yml
+  tags: remove, clean, uninstall
+  when: inventory_hostname in groups['engine']
+

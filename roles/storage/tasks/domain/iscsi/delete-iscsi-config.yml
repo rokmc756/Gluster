@@ -1,0 +1,23 @@
+---
+- name: Disable and Stop iSCSId
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  register: stop_iscsid
+  until: stop_iscsid is succeeded
+  retries: 3
+  delay: 10
+  with_items:
+    - "iscsid"
+
+
+- name: Delete iSCSI Config Files
+  file:
+    path: "/etc/iscsi/{{ item }}"
+    state: absent
+  register: delete_iscsi_config_files
+  with_items:
+    - "initiatorname.iscsi"
+    - "iscsid.conf"
+
+

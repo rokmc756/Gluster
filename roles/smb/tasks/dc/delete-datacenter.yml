@@ -1,0 +1,11 @@
+---
+- name: Delete Data Centers
+  ovirt_datacenter:
+    name: "{{ item.name }}"
+    compatibility_version: "{{ item.compat_ver }}"
+    state: absent
+    auth: "{{ _ovirt.engine.auth }}"
+    description: "{{ item.desc }}"
+  with_items:
+    - "{{ _dc }}"
+

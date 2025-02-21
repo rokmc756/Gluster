@@ -1,0 +1,15 @@
+---
+- name: Probe Gluster Nodes
+  shell: |
+    gluster peer probe {{ item }}
+  register: probe_nodes
+  with_items: "{{ groups['append'] }}"
+- debug: msg={{ probe_nodes }}
+
+
+- name: Confirm Gluster Status
+  shell: |
+    gluster peer status
+  register: confirm_status
+- debug: msg={{ confirm_status }}
+

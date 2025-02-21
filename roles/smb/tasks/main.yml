@@ -1,0 +1,62 @@
+---
+- name: Check OS ( Gluster NFS Ganesha )
+  fail: msg="Not a Red Hat or SuSE based system!"
+  when: ansible_os_family != 'RedHat' or  ansible_os_family != 'CentOS' or  ansible_os_family != 'Rocky'
+
+
+- name: Set Facts For Network and Packages Informations
+  import_tasks: set-smb-facts.yml
+  tags: install, uninstall, deploy, destory, setup, remove, enable, disable, create, delete, add, start, stop
+
+
+- name: Import Repository and Packages Playbook
+  import_tasks: pkgs/main.yml
+  when: ( repo is defined and repo == true ) or ( pkgs is defined and pkgs == true )
+
+
+- name: Import Gluster Samba Playbook
+  import_tasks: server/main.yml
+  when: ( server is defined and server == true )
+
+
+- name: Enable Samba Mode
+  import_tasks: enable-samba-mode.yml
+  tags: enable, install
+  when: ( samba is defined and samba == true ) and inventory_hostname in groups['control']
+
+
+- name: Enable CTDB Mode
+  import_tasks: enable-ctdb.yml
+  tags: enable, install
+  when: ( ctdb is defined and ctdb == true ) and inventory_hostname in groups['workers']
+
+
+#- name: Config Samba
+#  import_tasks: config-samba.yml
+#  tags: config, install
+#  when: ( samba is defined and samba == true ) and inventory_hostname in groups['workers']
+
+
+- name: Config Samba Share
+  import_tasks: enable-samba-share.yml
+  tags: config, install
+  when: ( samba is defined and samba == true ) and inventory_hostname in groups['control']
+
+
+- name: Disable Samba Share
+  import_tasks: disable-samba-share.yml
+  tags: disable, install
+  when: ( samba is defined and samba == true ) and inventory_hostname in groups['control']
+
+
+
+- name: Import Gluster Samba Clients Playbook
+  import_tasks: client/main.yml
+  when: ( client is defined and client == true )
+
+
+#- name: Setup NTP Service
+#  import_tasks: ext/setup-chrony.yml
+#  tags: setup, install
+#  when: ( ntp is defined and ntp == true )
+

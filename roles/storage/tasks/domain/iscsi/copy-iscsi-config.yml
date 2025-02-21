@@ -1,0 +1,23 @@
+---
+- name: Copy iSCSI Config Templates
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/iscsi/{{ item }}"
+    mode: 0644
+  register: copy_iscsi_config_temp
+  with_items:
+    - "initiatorname.iscsi"
+    - "iscsid.conf"
+
+
+- name: Enable and Start iSCSId
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+  register: restart_iscsid
+  until: restart_iscsid is succeeded
+  retries: 3
+  delay: 10
+  with_items:
+    - "iscsid"
+

@@ -1,0 +1,11 @@
+---
+- name: Create Directory
+  file:
+    path: "/glusterfs/distributed"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  register: create_dir
+- debug: msg={{ create_dir }}
+  when: print_debug == true

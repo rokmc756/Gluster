@@ -1,0 +1,52 @@
+---
+- name: Stop Gluster Volume
+  gluster_volume:
+    name: vol_distributed
+    state: stopped
+  register: stop_volumes
+- debug: msg={{ stop_volumes }}
+# echo y | gluster volume stop vol_distributed
+
+
+- name: Confirm Gluster Volume Status
+  shell: |
+    gluster volume status vol_distributed
+  register: confirm_volume_status
+  until: "'not started' in confirm_volume_status.stderr"
+  retries: 10
+  delay: 10
+  failed_when: "'is not started' not in confirm_volume_status.stderr"
+- debug: msg={{ confirm_volume_status }}
+
+
+- name: Delete Gluster Volumes
+  gluster_volume:
+    name: vol_distributed
+    state: absent
+  register: delete_volumes
+- debug: msg={{ delete_volumes }}
+# echo y | gluster volume delete vol_distributed
+
+
+- name: Confirm Gluster Volume Status
+  shell: |
+    gluster volume status vol_distributed
+  register: confirm_volume_status
+  until: "'does not exist' in confirm_volume_status.stderr"
+  retries: 10
+  delay: 10
+  failed_when: "'does not exist' not in confirm_volume_status.stderr"
+- debug: msg={{ confirm_volume_status }}
+
+
+- name: Delete Directory
+  file:
+    path: "/glusterfs/distributed"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  register: create_dir
+- debug: msg={{ create_dir }}
+  when: print_debug == true
+

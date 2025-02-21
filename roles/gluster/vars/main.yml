@@ -1,0 +1,6 @@
+---
+_volumes:
+  - { name: "distvol01", brick: "/glusterfs/jbrick01", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol01", fn: "fs-text01.txt" }
+  - { name: "distvol02", brick: "/glusterfs/jbrick02", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol02", fn: "fs-text02.txt" }
+  - { name: "distvol03", brick: "/glusterfs/jbrick03", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol03", fn: "fs-text03.txt" }
+

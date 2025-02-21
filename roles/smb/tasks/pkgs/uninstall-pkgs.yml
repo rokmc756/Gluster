@@ -1,0 +1,12 @@
+---
+- name: Uninstall Packages
+  package:
+    name: "{{ item }}"
+    state: absent
+  register: uninstall_pkgs
+  with_items:
+    - "samba"
+    - "ctdb"
+    - "samba-vfs-glusterfs"
+- debug: msg={{ uninstall_pkgs }}
+

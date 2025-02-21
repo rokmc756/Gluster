@@ -1,0 +1,8 @@
+---
+- name: Fail if LUN ID is SR Device
+  debug: msg={{ "ID is not matched with LUN Type" }}
+  when: ( oe_sd_lun_id == "sr0" ) or ( oe_sd_lun_id | regex_search('^sd*$') )
+
+
+- meta: end_play
+  when: ( oe_sd_lun_id == "sr0" ) or ( oe_sd_lun_id | regex_search('^sd*$') )

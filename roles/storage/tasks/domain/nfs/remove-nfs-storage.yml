@@ -1,0 +1,31 @@
+---
+- name: Set NFS Storage Domain to Maintenance Mode
+  ovirt_storage_domain:
+    name: "{{ _sd.nfs.name }}"
+    host: "{{ hostvars[groups['hosts'][0]].ansible_hostname }}"
+    data_center: "{{ _dc[0].name }}"
+    state: maintenance
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Unattach NFS Storage Domain
+  ovirt_storage_domain:
+    name: "{{ _sd.nfs.name }}"
+    host: "{{ hostvars[groups['hosts'][0]].ansible_hostname }}"
+    data_center: "{{ _dc[0].name }}"
+    state: unattached
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Remove NFS Storage Domain
+  ovirt_storage_domain:
+    name: "{{ _sd.nfs.name }}"
+    host: "{{ hostvars[groups['hosts'][0]].ansible_hostname }}"
+    data_center: "{{ _dc[0].name }}"
+    state: absent
+    format: true
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+

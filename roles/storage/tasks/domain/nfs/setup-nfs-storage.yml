@@ -1,0 +1,12 @@
+---
+- name: Add NFS Storage Domain
+  ovirt_storage_domain:
+    name: "{{ _sd.nfs.name }}"
+    host: "{{ hostvars[groups['hosts'][0]].ansible_hostname }}"
+    data_center: "{{ _dc[0].name }}"
+    nfs:
+      address: "{{ hostvars[groups['nfs'][0]].ansible_ssh_host }}"
+      path: "{{ _nfs.root_dir }}"
+    storage_format: v5
+    auth: "{{ _ovirt.engine.auth }}"
+

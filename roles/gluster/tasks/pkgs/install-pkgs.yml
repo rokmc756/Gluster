@@ -1,0 +1,7 @@
+---
+- name: Install Package
+  package:
+    name: glusterfs-server
+    state: present
+  register: install_pkgs
+

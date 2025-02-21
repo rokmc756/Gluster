@@ -1,0 +1,34 @@
+---
+- name: Delete Multiline Match and Append Lines
+  lineinfile:
+    path: "/etc/samba/smb.conf"
+    regexp: "{{ item.regexp }}"
+    state: absent
+  register: delete_samba_share
+  with_items:
+    - { regexp: "^writable = yes" }
+    - { regexp: "^valid users = @smbgroup" }
+    - { regexp: "^force create mode = 777" }
+    - { regexp: "^force directory mode = 777" }
+    - { regexp: "^inherit permissions = yes" }
+- debug: msg={{ delete_samba_share }}
+
+
+- name: Delete Samba Share
+  lineinfile:
+    path: "/etc/samba/smb.conf"
+    regexp: "{{ item.regexp }}"
+    state: absent
+  register: delete_samba_share
+  with_items:
+    - { regexp: "^        clustering = yes",            state: absent }
+    - { regexp: "^        kernel share modes = no",     state: absent }
+    - { regexp: "^        kernel oplocks = no",         state: absent }
+    - { regexp: "^        map archive = no",            state: absent }
+    - { regexp: "^        map hidden = no",             state: absent }
+    - { regexp: "^        map read only = no",          state: absent }
+    - { regexp: "^        map system = no",             state: absent }
+    - { regexp: "^        store dos attributes = yes",  state: absent }
+- debug: msg={{ delete_samba_share }}
+
+

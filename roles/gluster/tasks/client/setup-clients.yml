@@ -1,0 +1,52 @@
+---
+- name: Install GlusterFS Client Packages
+  package: name={{item}} state=present
+  with_items:
+    - "glusterfs"
+    - "glusterfs-fuse"
+  register: install_glusterfs_client_pkgs
+- debug: msg={{ install_glusterfs_client_pkgs }}
+  when: print_debug == true
+
+
+- name: Create Directory to Mount
+  file:
+    path: "{{ item.mount_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+    recurse: yes
+  register: create_nfs_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ create_nfs_dir }}
+  when: print_debug == true
+
+
+- name: Mount Ephemeral Gluster Volume
+  mount:
+    src: "{{ hostvars[groups['control'][0]].ansible_ssh_host }}:/{{ item.name }}"
+    path: "{{ item.mount_dir }}"
+    opts: ""
+    fstype: glusterfs
+    state: ephemeral
+  register: mount_gluster_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ mount_gluster_dir }}
+  when: print_debug == true
+# mount -t glusterfs 192.168.2.171:{{ item.brick }} {{ item.mount_dir }}
+
+
+- name: Create a File with the Content
+  copy:
+    content: "Hellow Gluster Volume World!"
+    dest: "{{ item.mount_dir }}/{{ item.fn }}"
+    force: no
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ _volumes }}"
+  register: create_file
+- debug: msg={{ create_file }}
+  when: print_debug == true
+

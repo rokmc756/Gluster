@@ -1,0 +1,25 @@
+[all:vars]
+ssh_key_filename="id_rsa"
+remote_machine_username="jomoon"
+remote_machine_password="changeme"
+ansible_python_interpreter=/usr/bin/python3
+
+
+[control]
+co9-node01      ansible_ssh_host=192.168.2.171
+
+
+[workers]
+co9-node01      ansible_ssh_host=192.168.2.171
+co9-node02      ansible_ssh_host=192.168.2.172
+co9-node03      ansible_ssh_host=192.168.2.173
+
+
+[append]
+co9-node02      ansible_ssh_host=192.168.2.172
+co9-node03      ansible_ssh_host=192.168.2.173
+
+
+[clients]
+co9-node04      ansible_ssh_host=192.168.2.174
+

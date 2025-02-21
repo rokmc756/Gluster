@@ -1,0 +1,65 @@
+---
+- name: Change Postgres Parameters for oVirt Engine Database
+  become_user: postgres
+  lineinfile:
+    dest: "/var/lib/pgsql/data/postgresql.conf"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { regexp: '^#autovacuum_vacuum_scale_factor =*',    line: 'autovacuum_vacuum_scale_factor = 0.01',    state: present }
+    - { regexp: '^#autovacuum_analyze_scale_factor =*',   line: 'autovacuum_analyze_scale_factor = 0.075',  state: present }
+    - { regexp: '^#autovacuum_max_workers =*',            line: 'autovacuum_max_workers = 8',               state: present }
+    - { regexp: '^#work_mem =*',                          line: 'work_mem = 10MB',                          state: present }
+    - { regexp: '^max_connections =*',                    line: 'max_connections = 200',                    state: present }
+
+
+#    Please note the following required changes in postgresql.conf on '192.168.2.175':
+#    'autovacuum_vacuum_scale_factor' is currently '0.2'. It is required to be at most '0.01'.
+#    'autovacuum_analyze_scale_factor' is currently '0.1'. It is required to be at most '0.075'.
+#    'autovacuum_max_workers' is currently '3'. It is required to be at least '6'.
+#    'work_mem' is currently '4096'. It is required to be at least '8192'.
+#    'max_connections' is currently '100'. It is required to be at least '150'.
+#  postgresql.conf is usually in /var/lib/pgsql/data,  or somewhere under /etc/postgresql* . You have to restart PostgreSQL after making these changes.
+
+
+#          postgres=# create role <user_name> with login encrypted password '<password>';
+#          To create a database:
+#          postgres=# create database <database_name> owner <user_name> template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';
+#
+#          If you plan for a remote application to use this database, make sure it can be accessed remotely.
+#
+#          DWH database host [localhost]:192.168.2.175
+#          DWH database port [5432]:
+#          DWH database secured connection (Yes, No) [No]:Yes
+#          DWH database host name validation in secured connection (Yes, No) [Yes]:No
+#          DWH database name [ovirt_engine_history]:
+#          DWH database user [ovirt_engine_history]:ovirt_user
+#          DWH database password:
+#
+#          Please create the database for the Keycloak to use.
+#          To create a user:
+#          postgres=# create role <user_name> with login encrypted password '<password>';
+#          To create a database:
+#          postgres=# create database <database_name> owner <user_name> template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';
+#
+#          If you plan for a remote application to use this database, make sure it can be accessed remotely.
+
+
+#          Please create the database for the Engine to use.
+#          To create a user:
+#          postgres=# create role <user_name> with login encrypted password '<password>';
+#          To create a database:
+#          postgres=# create database <database_name> owner <user_name> template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';
+#
+#          If you plan for a remote application to use this database, make sure it can be accessed remotely.
+#
+#          Engine database host [localhost]:192.168.2.175
+#          Engine database port [5432]:
+#          Engine database secured connection (Yes, No) [No]:Yes
+#          Engine database host name validation in secured connection (Yes, No) [Yes]:No
+#          Engine database name [engine]:
+#          Engine database user [engine]:ovirt_user
+#          Engine database password:
+#[ ERROR ] Cannot connect to Engine database: Cannot connect to database: FATAL:  database "engine" does not exist
+

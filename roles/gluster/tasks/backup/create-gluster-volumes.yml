@@ -1,0 +1,52 @@
+---
+- name: Create Directory
+  file:
+    path: "/glusterfs/distributed"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  register: create_dir
+- debug: msg={{ create_dir }}
+  when: print_debug == true
+
+
+- name: Create Gluster Volumes
+  gluster_volume:
+    name: vol_distributed
+    state: present
+    force: true
+    bricks: /glusterfs/distributed
+    rebalance: yes
+    cluster: "{{ groups['workers'] }}"
+    options:
+      { performance.cache-size: 128MB,
+        write-behind: 'off',
+        quick-read: 'on'
+      }
+# gluster volume create vol_distributed transport tcp co9-node01:/glusterfs/distributed co9-node02:/glusterfs/distributed co9-node03:/glusterfs/distributed force
+
+
+#- name: Limit Volume Usage
+#  gluster_volume:
+#    name: vol_distributed
+#    state: present
+#    directory: /foo
+#    quota: 20.0MB
+
+
+- name: Start Gluster Volume
+  gluster_volume:
+    name: vol_distributed
+    state: started
+  register: start_volumes
+- debug: msg={{ start_volumes }}
+# gluster volume start vol_distributed
+
+
+- name: Confirm Gluster Volume Info
+  shell: |
+    gluster volume info
+  register: confirm_volume_info
+- debug: msg={{ confirm_volume_info }}
+

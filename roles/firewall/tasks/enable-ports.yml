@@ -1,0 +1,41 @@
+---
+- name: Enable and Start Firewalld
+  systemd:
+    name: firewalld
+    enabled: yes
+    state: started
+
+
+- name: Reset Ruleset for Public Zone
+  shell: |
+    firewall-cmd --load-zone-defaults=public --permanent
+    firewall-cmd --reload
+
+
+- name: Set Firewalld TCP Port Policy
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    state: enabled
+    zone: public
+    immediate: yes
+  loop: "{{ tcp_ports }}"
+
+
+- name: Set Firewalld UDP Port Policy
+  firewalld:
+    port: "{{ item }}/udp"
+    permanent: true
+    state: enabled
+    zone: public
+    immediate: yes
+  loop: "{{ udp_ports }}"
+
+
+- name: Add GlusterFS Service
+  shell: |
+    firewall-cmd --add-service=glusterfs
+    firewall-cmd --add-service=nfs                   # For NFS Ganesha
+    firewall-cmd --runtime-to-permanent
+
+

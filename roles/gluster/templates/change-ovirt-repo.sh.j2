@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for repo in oVirt-4.5 Storage-common OpenStack-yoga Messaging-rabbitmq NFV-OpenvSwitch Ceph-Pacific Gluster-10 OpsTools; do
+ sudo sed -i 's/$stream/9-stream/' /etc/yum.repos.d/CentOS-$repo.repo
+done
+

@@ -1,0 +1,36 @@
+---
+- name: Copy iSCSI Config Files
+  import_tasks: domain/iscsi/copy-iscsi-config.yml
+  tags: add, setup, install
+  when: inventory_hostname in groups['hosts']
+
+
+- name: Get iSCSi LUN ID
+  import_tasks: domain/iscsi/get-iscsi-lun-id.yml
+  tags: add, setup, install
+  when: inventory_hostname in groups['initiator']
+
+
+- name: Add iSCSi Storage Domain
+  import_tasks: domain/iscsi/setup-iscsi-storage.yml
+  tags: add, setup, install
+  when: inventory_hostname in groups['engine']
+
+
+- name: Remove iSCSI Storage Domain
+  import_tasks: domain/iscsi/remove-iscsi-storage.yml
+  tags: remove, clean, uninstall
+  when: inventory_hostname in groups['engine']
+
+
+- name: Wipe Target iSCSI Image Disks
+  import_tasks: domain/iscsi/clean-target-images.yml
+  tags: remove, clean, uninstall
+  when: inventory_hostname in groups['iscsi']
+
+
+- name: Delete iSCSI Config Files
+  import_tasks: domain/iscsi/delete-iscsi-config.yml
+  tags: remove, clean, uninstall
+  when: inventory_hostname in groups['hosts']
+

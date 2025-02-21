@@ -1,0 +1,15 @@
+---
+- name: Add oVirt Hosts
+  ovirt_host:
+    cluster: "{{ _cluster[0].name }}"
+    name: "{{ hostvars[inventory_hostname].ansible_hostname }}"
+    address: "{{ hostvars[inventory_hostname].ansible_ssh_host }}"
+    password: changeme
+    override_iptables: true
+    auth: "{{ _ovirt.engine.auth }}"
+  register: add_ovirt_hosts
+  delegate_to: "{{ hostvars[groups['engine'][0]].ansible_ssh_host }}"
+  delegate_facts: True
+  async: 3600
+  poll: 60
+

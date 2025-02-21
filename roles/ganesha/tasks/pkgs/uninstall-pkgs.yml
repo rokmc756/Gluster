@@ -1,0 +1,10 @@
+---
+- name: Uninstall Packages
+  package:
+    name: "{{ item }}"
+    state: absent
+  register: uninstall_pkgs
+  ignore_errors: true
+  with_items:
+    - nfs-ganesha-gluster
+

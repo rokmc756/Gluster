@@ -1,0 +1,37 @@
+---
+- name: Install Gluster Package Repository
+  package:
+    name: "centos-release-gluster{{ _gluster.major_version }}"
+    state: present
+  register: install_repo_pkgs
+- debug: msg={{ install_repo_pkgs }}
+  when: print_debug == true
+
+
+- name: Update Repository Configurations File
+  replace:
+    path: "/etc/yum.repos.d/CentOS-{{ item.fn }}.repo"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.line }}"
+    backup: "{{ item.backup }}"
+  register: change_required_config
+  with_items:
+    - { fn: "Gluster-{{ _gluster.major_version }}",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
+  # when: ansible_os_family == 'Rocky' and ansible_distribution_major_version|int == 9
+
+
+- name: Enable Gluster Server Repository
+  shell: |
+    dnf config-manager --enable "centos-gluster{{ _gluster.major_version }}"
+  register: enable_gluster_repo
+- debug: msg={{ enable_gluster_repo }}
+  when: print_debug == true
+
+
+- name: Update Caches for DNF Packages
+  shell: |
+    dnf makecache -y
+  register: update_dnf_cache
+- debug: msg={{ update_dnf_cache }}
+  when: print_debug == true
+

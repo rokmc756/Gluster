@@ -1,0 +1,46 @@
+---
+- name: Disable NFS Ports for Firewalld
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: disabled
+  ignore_errors: true
+  with_items:
+    - nfs
+    - mountd
+    - rpc-bind
+
+
+- name: Stop NFS Server
+  service:
+    name: nfs-server
+    state: stopped
+  ignore_errors: true
+
+
+- name: Remove NFS Exports
+  lineinfile:
+    dest: "{{ item.file }}"
+    regexp: "{{ item.regexp }}"
+    state: "{{ item.state }}"
+  ignore_errors: true
+  with_items:
+    - { file: "/etc/exports", regexp: "^\/ovirt-nfs-root*", state: absent }
+
+
+- name: Uninstall NFS Server
+  package:
+    name: "{{ item }}"
+    state: absent
+  ignore_errors: true
+  with_items:
+    - nfs-utils
+
+
+- name: Remove NFS Directory
+  file:
+    path: "{{ _nfs.root_dir }}"
+    state: absent
+  ignore_errors: true
+

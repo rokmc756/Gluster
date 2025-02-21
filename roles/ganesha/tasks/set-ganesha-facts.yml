@@ -1,0 +1,35 @@
+---
+- name: Get Network Interface Names from Prefix of IP Addresses Provided
+  set_fact:
+    netdev0: "{{ ansible_interfaces | map('regex_replace', '^', 'ansible_') | map('extract', vars) | selectattr('ipv4', 'defined') | selectattr('ipv4.address', 'match', _gluster.net.ipaddr0 ) | map(attribute='device') | first }}"
+    netdev2: "{{ ansible_interfaces | map('regex_replace', '^', 'ansible_') | map('extract', vars) | selectattr('ipv4', 'defined') | selectattr('ipv4.address', 'match', _gluster.net.ipaddr2 ) | map(attribute='device') | first }}"
+    # netdev1: "{{ ansible_interfaces | map('regex_replace', '^', 'ansible_') | map('extract', vars) | selectattr('ipv4', 'defined') | selectattr('ipv4.address', 'match', _gluster.net.ipaddr1 ) | map(attribute='device') | first }}"
+
+
+- name: Get IP Address From Provided Network Device Names
+  set_fact:
+    ipaddr0: "{{ hostvars[inventory_hostname]['ansible_'~netdev0].ipv4.address }}"
+    ipaddr2: "{{ hostvars[inventory_hostname]['ansible_'~netdev2].ipv4.address }}"
+    # ipaddr1: "{{ hostvars[inventory_hostname]['ansible_'~netdev1].ipv4.address }}"
+
+
+- name: Set Default Network Device and Address
+  set_fact:
+    netdev: "{{ netdev2 }}"
+    ipaddr: "{{ ipaddr2 }}"
+    _netdev: "{{ 'ansible_'~ netdev2 }}"
+    _ipaddr: "{{ ipaddr2 }}"
+
+
+#- name: Get Manager Manager IP Address
+#  set_fact:
+#    manager_ipaddr: "{{ hostvars[inventory_hostname][_netdev].ipv4.address }}"
+#  delegate_to: "{{ item }}"
+#  delegate_facts: true
+#  with_items: "{{ groups['all'] }}"
+
+
+- name: Define Gluster Version
+  set_fact:
+    gluster_version: "{{ _gluster.major_version }}.{{ _gluster.minor_version }}.{{ _gluster.patch_version }}-{{ _gluster.build_version }}-{{ _gluster.release_date }}"
+

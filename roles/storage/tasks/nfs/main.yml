@@ -1,0 +1,24 @@
+---
+- name: Setup NFS Server
+  import_tasks: nfs/setup-nfs-server.yml
+  tags: setup, install
+  when: ( server is defined and server == true ) and inventory_hostname in groups['nfs']
+
+
+- name: Setup NFS Client
+  import_tasks: nfs/setup-nfs-client.yml
+  tags: setup, install
+  when: ( client is defined and client == true ) and inventory_hostname in groups['engine']
+
+
+- name: Remove NFS Client
+  import_tasks: nfs/remove-nfs-client.yml
+  tags: remove, uninstall
+  when: ( client is defined and client == true ) and inventory_hostname in groups['engine']
+
+
+- name: Remove NFS Server
+  import_tasks: nfs/remove-nfs-server.yml
+  tags: remove, uninstall
+  when: ( server is defined and server == true ) and inventory_hostname in groups['nfs']
+

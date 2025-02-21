@@ -1,0 +1,12 @@
+---
+- name: Create Cluster
+  import_tasks: cluster/create-cluster.yml
+  tags: create, install
+  when: ( cluster is defined and cluster == true ) and inventory_hostname in groups['engine']
+
+
+- name: Delete Cluster
+  import_tasks: cluster/delete-cluster.yml
+  tags: delete, uninstall
+  when: ( cluster is defined and cluster == true ) and inventory_hostname in groups['engine']
+

@@ -1,0 +1,10 @@
+---
+- name: Remove Local Storage Domain
+  ovirt_storage_domain:
+    host: co9-node04
+    data_center: Default
+    name: jlocal-storage01
+    state: absent
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+

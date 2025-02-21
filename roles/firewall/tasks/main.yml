@@ -1,0 +1,15 @@
+---
+- name: Check OS ( Firewall )
+  fail: msg="Not a Red Hat based system!"
+  when: ansible_os_family != 'RedHat' or ansible_os_family != 'CentOS'  ansible_os_family != 'Rocky'
+
+
+- name: Enable Ports
+  import_tasks: enable-ports.yml
+  tags: enable, install
+
+
+- name: Disable Ports
+  import_tasks: disable-ports.yml
+  tags: disable, uninstall
+

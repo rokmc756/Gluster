@@ -1,0 +1,54 @@
+---
+- name: Add NFS Storage Domain
+  import_tasks: sd/setup-nfs-storage.yml
+  tags: add, install
+  when: ( nfs is defined and nfs == true ) and inventory_hostname in groups['engine']
+
+
+- name: Get iSCSi LUN ID
+  import_tasks: sd/get-iscsi-lun-id.yml
+  tags: add, install
+  when: ( iscsi is defined and iscsi == true ) and inventory_hostname in groups['initiator']
+
+
+- name: Add iSCSi Storage Domain
+  import_tasks: sd/setup-iscsi-storage.yml
+  tags: add, install
+  when: ( iscsi is defined and iscsi == true ) and inventory_hostname in groups['engine']
+
+
+- name: Add Local Storage Domain
+  import_tasks: sd/setup-local-storage.yml
+  tags: add, install
+  when: ( local is defined and local == true ) and inventory_hostname in groups['engine']
+
+
+- name: Remove Local Storage Domain
+  import_tasks: sd/remove-local-storage.yml
+  tags: remove, uninstall
+  when: ( local is defined and local == true ) and inventory_hostname in groups['engine']
+
+
+- name: Remove iSCSI Storage Domain
+  import_tasks: sd/remove-iscsi-storage.yml
+  tags: remove, uninstall
+  when: ( iscsi is defined and iscsi == true ) and inventory_hostname in groups['engine']
+
+
+- name: Wipe Target iSCSI Image Disks
+  import_tasks: sd/clean-target-images.yml
+  tags: remove, uninstall
+  when: ( iscsi is defined and iscsi == true ) and inventory_hostname in groups['iscsi']
+
+
+- name: Remove NFS Storage Domain
+  import_tasks: sd/remove-nfs-storage.yml
+  tags: remove, uninstall
+  when: ( nfs is defined and nfs == true ) and inventory_hostname in groups['engine']
+
+
+- name: Clean NFS Root Directory
+  import_tasks: sd/clean-nfs-root-dir.yml
+  tags: remove, uninstall
+  when: ( nfs is defined and nfs == true ) and inventory_hostname in groups['nfs']
+

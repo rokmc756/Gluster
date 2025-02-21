@@ -1,0 +1,38 @@
+---
+- name: Delete Text File
+  file:
+    path: "{{ item.mount_dir }}/{{ item.fn }}"
+    state: absent
+  register: delete_text_files
+  with_items: "{{ _volumes }}"
+- debug: msg={{ delete_text_files }}
+  when: print_debug == true
+
+
+- name: Umount GlusterFS Directory
+  mount:
+    path: "{{ item.mount_dir }}"
+    state: unmounted
+  register: umount_glusterfs_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ umount_glusterfs_dir }}
+  when: print_debug == true
+# umount -f -l {{ item.mount_dir }}
+
+
+- name: Delete Directory Mounted with GlusterFS
+  file:
+    path: "{{ item.mount_dir }}"
+    state: absent
+  register: delete_glusterfs_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ delete_glusterfs_dir }}
+  when: print_debug == true
+
+
+- name: Uninstall GlusterFS Client
+  package: name={{ item }} state=absent
+  with_items:
+    - "glusterfs"
+    - "glusterfs-fuse"
+

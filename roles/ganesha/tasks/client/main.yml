@@ -1,0 +1,12 @@
+---
+- name: Setup GlusterFS Clients
+  import_tasks: client/setup-clients.yml
+  tags: setup, install
+  when: ( nfs is defined and nfs == true ) and inventory_hostname in groups['clients']
+
+
+- name: Remove GlusterFS Clients
+  import_tasks: client/remove-clients.yml
+  tags: remove, uninstall
+  when: ( nfs is defined and nfs == true ) and inventory_hostname in groups['clients']
+

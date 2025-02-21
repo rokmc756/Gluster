@@ -1,0 +1,7 @@
+---
+- name: Stop and Disable Gluster Server
+  systemd:
+    name: glusterd
+    state: stopped
+    enabled: no
+

@@ -1,0 +1,7 @@
+---
+- name: Clean NFS Root Directory
+  file:
+    path: "/ovirt-nfs-root/*"
+    state: absent
+  register: clean_nfs_root_dir
+

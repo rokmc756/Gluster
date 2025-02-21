@@ -1,0 +1,26 @@
+---
+- name: Check OS ( Storage )
+  fail: msg="Not a Red Hat or SuSE based system!"
+  when: ansible_os_family != 'RedHat' or  ansible_os_family != 'CentOS' or  ansible_os_family != 'Rocky'
+
+
+- name: Set Facts For Network and Packages Informations
+  import_tasks: set-storage-facts.yml
+  tags: install, uninstall, create, delete, setup, remove, clean, add
+
+
+- name: Import iSCSI Target and Initiator Playbook
+  import_tasks: iscsi/main.yml
+  when: ( iscsi is defined and iscsi == true ) and ( target is defined or initiator is defined )
+
+
+- name: Import NFS Server and Client Playbook
+  import_tasks: nfs/main.yml
+  when: ( nfs is defined and nfs == true ) and ( server is defined or client is defined )
+
+
+- name: Import Storage Domain Playbook
+  import_tasks: domain/main.yml
+  when: ( domain is defined and domain == true ) and ( local is defined or iscsi is defined or nfs is defined )
+
+

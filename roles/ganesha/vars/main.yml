@@ -1,0 +1,6 @@
+---
+_volumes:
+  - { name: "distvol01", brick: "/glusterfs/jbrick01", export_id: 101, mount_dir: "/mnt/nfs-dir01", fn: "nfs-text01.txt" }
+  - { name: "distvol02", brick: "/glusterfs/jbrick02", export_id: 102, mount_dir: "/mnt/nfs-dir02", fn: "nfs-text02.txt" }
+  - { name: "distvol03", brick: "/glusterfs/jbrick03", export_id: 103, mount_dir: "/mnt/nfs-dir03", fn: "nfs-text03.txt" }
+

@@ -1,0 +1,11 @@
+---
+- name: Create Data Centers
+  ovirt_datacenter:
+    name: "{{ item.name }}"
+    local: "{{ item.local }}"
+    quota_mode: "{{ item.quota }}"
+    auth: "{{ _ovirt.engine.auth }}"
+    compatibility_version: "{{ item.compat_ver }}"
+    description: "{{ item.desc }}"
+  with_items: "{{ _dc }}"
+

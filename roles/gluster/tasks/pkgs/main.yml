@@ -1,0 +1,24 @@
+---
+- name: Enable oVirt Repository
+  import_tasks: pkgs/enable-repo.yml
+  tags: enable, setup, install
+  when: ( repo is defined and repo == true )
+
+
+- name: Install oVirt Packages
+  import_tasks: pkgs/install-pkgs.yml
+  tags: install, setup
+  when: ( pkgs is defined and pkgs == true )
+
+
+- name: Uninstall oVirt Packages
+  import_tasks: pkgs/uninstall-pkgs.yml
+  tags: uninstall, remove
+  when: ( pkgs is defined and pkgs == true )
+
+
+- name: Disable oVirt Repository
+  import_tasks: pkgs/disable-repo.yml
+  tags: disable, remove, uninstall
+  when: ( repo is defined and repo == true )
+

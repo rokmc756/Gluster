@@ -1,0 +1,12 @@
+---
+- name: Create DataCenter
+  import_tasks: dc/create-datacenter.yml
+  tags: create, install
+  when: ( dc is defined and dc == true ) and inventory_hostname in groups['engine']
+
+
+- name: Delete DataCenter
+  import_tasks: dc/delete-datacenter.yml
+  tags: delete, uninstall
+  when: ( dc is defined and dc == true ) and inventory_hostname in groups['engine']
+

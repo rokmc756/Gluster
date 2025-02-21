@@ -1,0 +1,22 @@
+---
+- name: Disable Firewalld TCP Port Policy
+  firewalld: port={{ item }}/tcp permanent=true state=disabled zone=public immediate=yes
+  loop: "{{ tcp_ports }}"
+  notify: Restart Firewalld
+
+
+- name: Disable Firewalld UDP Port Policy
+  firewalld: port={{ item }}/udp permanent=true state=disabled zone=public immediate=yes
+  loop: "{{ udp_ports }}"
+  notify: Restart Firewalld
+
+
+- name: Reset Ruleset For Public Zone In Firewalld
+  shell: |
+    firewall-cmd --load-zone-defaults=public --permanent
+    firewall-cmd --reload
+
+
+- name: Disable And Stop Firewalld
+  service: name=firewalld state=stopped
+

@@ -1,0 +1,18 @@
+---
+- name: Add NFS Storage Domain
+  import_tasks: domain/nfs/setup-nfs-storage.yml
+  tags: add, setup, install
+  when: inventory_hostname in groups['engine']
+
+
+- name: Remove NFS Storage Domain
+  import_tasks: domain/nfs/remove-nfs-storage.yml
+  tags: remove, clean, uninstall
+  when: inventory_hostname in groups['engine']
+
+
+- name: Clean NFS Root Directory
+  import_tasks: domain/nfs/clean-nfs-root-dir.yml
+  tags: remove, clean, uninstall
+  when: inventory_hostname in groups['nfs']
+

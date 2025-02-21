@@ -1,0 +1,7 @@
+---
+_nfs:
+  root_dir: "/ovirt-nfs-root"
+  mode: "0777"
+  client:
+    - { mount_dir: "/ovirt-nfs-mount", src: "/ovirt-nfs-root", nfs_server_ip: "{{ hostvars[groups['nfs'][0]][_netdev].ipv4.address }}"  }
+

@@ -1,0 +1,47 @@
+---
+- name: Create Directory
+  file:
+    path: "{{ item.brick }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  register: create_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ create_dir }}
+  when: print_debug == true
+
+
+- name: Create Gluster Volumes
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: present
+    force: true
+    bricks: "{{ item.brick }}"
+    rebalance: yes
+    cluster: "{{ groups['workers'] }}"
+    options:
+      { performance.cache-size: "{{ item.perf_cache_size }}",
+        write-behind: "{{ item.wb }}",
+        quick-read: "{{ item.qr }}"
+      }
+  with_items: "{{ _volumes }}"
+# gluster volume create vol_distributed transport tcp co9-node01:/glusterfs/distributed co9-node02:/glusterfs/distributed co9-node03:/glusterfs/distributed force
+
+
+- name: Start Gluster Volume
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: started
+  register: start_volumes
+  with_items: "{{ _volumes }}"
+- debug: msg={{ start_volumes }}
+# gluster volume start vol_distributed
+
+
+- name: Confirm Gluster Volume Info
+  shell: |
+    gluster volume info
+  register: confirm_volume_info
+- debug: msg={{ confirm_volume_info }}
+

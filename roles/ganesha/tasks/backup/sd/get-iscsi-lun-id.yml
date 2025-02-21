@@ -1,0 +1,69 @@
+---
+- name: Copy iSCSI Config Templates
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/iscsi/{{ item }}"
+    mode: 0644
+  register: copy_iscsi_config_temp
+  with_items:
+    - "initiatorname.iscsi"
+    - "iscsid.conf"
+
+
+#- name: Restart iSCSId Services
+#  systemd:
+#    name: "{{ item.service }}"
+#    state: "{{ item.state }}"
+#    enabled: true
+#    daemon_reload: true
+#  register: restart_service
+#  until: restart_service is succeeded
+#  retries: 3
+#  delay: 20
+#  with_items:
+#    - { service: iscsid, state: restarted }
+
+
+- name: Discovery iSCSI Target
+  shell: |
+    iscsiadm -m discovery -t sendtargets -p 192.168.2.176
+  register: discovery_iscsi_target
+
+
+- name: Login iSCSI Node
+  shell: |
+    iscsiadm -m node --login -p 192.168.2.176
+  register: login_iscsi_node
+
+
+- name: Get LUN ID
+  shell: |
+    lsblk | grep -A 1 $(fdisk -l | grep -B 1 'Disk model: {{ _iscsi.target.disks[0].name }}'  | sed 2d | awk '{print $2}' | cut -d : -f 1 | cut -d '/' -f 3) | sed 1d | awk '{print $1}' | sed $'s/[^[:alnum:]\t]//g'
+  register: get_lun_id
+
+
+
+- name: Set Facts for LUN ID
+  set_fact:
+    oe_sd_lun_id: "{{ get_lun_id.stdout }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  with_items:
+    - "{{ groups['iscsi'] }}"
+    - "{{ groups['engine'] }}"
+    - "{{ groups['initiator'] }}"
+
+
+# - debug: msg={{ oe_sd_lun_id }}
+
+
+- name: Logout iSCSI Node
+  shell: |
+    iscsiadm -m node --logout -p 192.168.2.176
+  register: logout_iscsi_node
+
+
+- debug: msg={{ oe_sd_lun_id }}
+
+
+# - meta: end_play

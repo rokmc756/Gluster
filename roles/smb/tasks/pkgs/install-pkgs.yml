@@ -1,0 +1,13 @@
+---
+- name: Setup Relevant Package
+  package:
+    name: "{{ item.pkg }}"
+    state: "{{ item.state }}"
+  register: setup_pkgs
+  with_items:
+    - { pkg: "libldb", state: "absent" }
+    - { pkg: "samba",  state: "present" }
+    - { pkg: "ctdb",   state: "present" }
+    - { pkg: "samba-vfs-glusterfs", state: "present" }
+- debug: msg={{ setup_pkgs }}
+

@@ -1,0 +1,33 @@
+---
+- name: Set iSCSI Storage Domain to Maintenance Mode
+  ovirt_storage_domain:
+    name: jiscsi-storage01
+    host: co9-node03.jtest.pivotal.io
+    data_center: Default
+    state: maintenance
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Unattach iSCSI Storage Domain
+  ovirt_storage_domain:
+    name: jiscsi-storage01
+    host: co9-node03.jtest.pivotal.io
+    data_center: Default
+    state: unattached
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Remove iSCSI Storage Domain
+  ovirt_storage_domain:
+    host: co9-node03.jtest.pivotal.io
+    data_center: Default
+    name: jiscsi-storage01
+    state: absent
+    destroy: true
+    format: true
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+

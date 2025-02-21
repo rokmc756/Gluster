@@ -1,0 +1,24 @@
+---
+- name: Remove oVirt Hosts
+  ovirt_host:
+    cluster: "{{ _cluster[0].name }}"
+    name: "{{ hostvars[inventory_hostname].ansible_hostname }}"
+    state: absent
+    force: True
+    auth: "{{ _ovirt.engine.auth }}"
+  register: remove_ovirt_hosts
+  delegate_to: "{{ hostvars[groups['engine'][0]].ansible_ssh_host }}"
+  delegate_facts: True
+
+
+#- name: Remove oVirt Network ( Mendantory )
+#  ovirt_network:
+#    name: ovirtmgmt
+#    data_center: "{{ _dc[0].name }}"
+#    state: absent
+#    wait: true
+#    auth: "{{ _ovirt.engine.auth }}"
+#  register: remove_ovirt_network
+#  delegate_to: "{{ hostvars[groups['engine'][0]].ansible_ssh_host }}"
+#  delegate_facts: True
+

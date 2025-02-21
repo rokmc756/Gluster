@@ -1,0 +1,35 @@
+---
+- name: Rollback Repository Configurations File
+  replace:
+    path: "/etc/yum.repos.d/CentOS-{{ item.fn }}.repo"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.line }}"
+    backup: "{{ item.backup }}"
+  register: rollback_required_config
+  with_items:
+    - { fn: "NFS-Ganesha-4",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
+  # when: ansible_os_family == 'Rocky' and ansible_distribution_major_version|int == 9
+
+
+- name: Disable Gluster NFS Ganesha Repository
+  shell: |
+    dnf config-manager --disable "centos-nfs-ganesha-4"
+  register: disable_gluster_repo
+- debug: msg={{ disable_gluster_repo }}
+  when: print_debug == true
+
+
+- name: Uninstall Gluster NFS Ganesha Package Repository
+  package:
+    name: "{{ item }}"
+    state: absent
+  register: uninstall_repo_pkgs
+  with_items:
+    - "centos-release-nfs-ganesha4"
+
+
+- name: Update Caches for DNF Packages
+  shell: |
+    dnf makecache -y
+  register: update_dnf_cache
+

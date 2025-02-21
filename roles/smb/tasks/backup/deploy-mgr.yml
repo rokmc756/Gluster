@@ -1,0 +1,85 @@
+---
+- name: Install NGINX Packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "nginx-mod-stream"
+
+
+- name: Add Required Settings for OKD Cluster to Nginx
+  lineinfile:
+    dest: "/etc/nginx/nginx.conf"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state }}"
+  register: add_required_nginx_config
+  with_items:
+    - { regexp: "^        listen       80*",          line: "        listen       8080;",           state: present }
+    - { regexp: "^        listen       [::]*",        line: "        listen       [::]:8080;",      state: present }
+
+
+- name: Add NGINX Config Lines to the End
+  template:
+    dest: "/etc/nginx/{{ item }}.conf"
+    src: "{{ item }}-worker.conf.j2"
+  register: add_nginx_config_lines
+  with_items:
+    - "okd-mgr-nginx"
+- debug: msg={{ add_nginx_config_lines }}
+
+
+- name: Add NGINX Config for OKD's MGR
+  lineinfile:
+    dest: "/etc/nginx/nginx.conf"
+    line: "include /etc/nginx/okd-mgr-nginx.conf;"
+    state: present
+
+
+- name: Restart NGINX
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+  register: restart_service
+  until: restart_service is succeeded
+  retries: 10
+  delay: 10
+  with_items:
+    - nginx
+- debug: msg={{ restart_service }}
+  when: print_debug == true
+
+
+- name: Enable SELinux for Only Manager node
+  import_tasks: ext/enable-selinux.yml
+
+
+- name: Enable Firewalld for Only Manager node
+  import_tasks: ext/enable-firewall.yml
+
+
+#- name: Change SELinux Policy If It is Enabled
+#  shell: |
+#    setsebool -P httpd_can_network_connect on
+#    setsebool -P httpd_graceful_shutdown on
+#    setsebool -P httpd_can_network_relay on
+#    setsebool -P nis_enabled on
+#    semanage port -a -t http_port_t -p tcp 6443
+#    semanage port -a -t http_port_t -p tcp 22623
+#    semanage port -a -t http_port_t -p tcp 1936
+#  register: config_dns_settings
+#- debug: msg={{ config_dns_settings }}
+#  when: print_debug == true
+
+
+#- name: Allow Service Ports If Firewalld is running
+#  shell: |
+#    firewall-cmd --add-service={dns,http,https}
+#    firewall-cmd --add-port={6443/tcp,22623/tcp,1936/tcp,8080/tcp}
+#    firewall-cmd --runtime-to-permanent
+#  register: allow_firewalld_service_port
+#- debug: msg={{ allow_firewalld_service_port }}
+#  when: print_debug == true
+

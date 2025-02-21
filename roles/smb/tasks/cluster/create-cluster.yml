@@ -1,0 +1,12 @@
+---
+- name: Create Cluster
+  ovirt_cluster:
+    data_center: "{{ item.dc }}"
+    name: "{{ item.name }}"
+    cpu_type: "{{ item.cpu_type }}"
+    compatibility_version: "{{ item.compat_ver }}"
+    description: "{{ item.desc }}"
+    state: present
+    auth: "{{ _ovirt.engine.auth }}"
+  with_items: "{{ _cluster }}"
+

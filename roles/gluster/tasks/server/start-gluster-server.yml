@@ -1,0 +1,15 @@
+---
+- name: Start and Enable Gluster Server
+  systemd:
+    name: glusterd
+    state: started
+    enabled: yes
+
+
+- name: Check Gluster Service
+  shell: |
+     gluster --version
+  register: check_gluster_service
+- debug: msg={{ check_gluster_service }}
+  when: print_debug == true
+

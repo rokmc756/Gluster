@@ -1,0 +1,12 @@
+---
+- name: Add Hosts
+  import_tasks: host/add-hosts.yml
+  tags: add, install
+  when: ( host is defined and host == true ) and inventory_hostname in groups['hosts']
+
+
+- name: Remove Hosts
+  import_tasks: host/remove-hosts.yml
+  tags: remove, uninstall
+  when: ( host is defined and host == true ) and inventory_hostname in groups['hosts']
+

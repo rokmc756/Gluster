@@ -1,0 +1,42 @@
+---
+- name: Set iSCSI Storage Domain to Maintenance Mode
+  ovirt_storage_domain:
+    name: "{{ _sd.iscsi.name }}"
+    host: "{{ hostvars[groups['hosts'][1]].ansible_hostname }}"
+    data_center: "{{ _dc[0].name }}"
+    state: maintenance
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Unattach iSCSI Storage Domain
+  ovirt_storage_domain:
+    name: "{{ _sd.iscsi.name }}"
+    host: "{{ hostvars[groups['hosts'][1]].ansible_hostname }}"
+    data_center: "{{ _dc[0].name }}"
+    state: unattached
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Remove iSCSI Storage Domain
+  ovirt_storage_domain:
+    name: "{{ _sd.iscsi.name }}"
+    host: "{{ hostvars[groups['hosts'][1]].ansible_hostname }}"
+    data_center: "{{ _dc[0].name }}"
+    state: absent
+    destroy: true
+    format: true
+    wait: true
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+#- name: Delete iSCSI Initiator Config
+#  file:
+#    path: "/etc/iscsi/{{ item }}"
+#    state: absent
+#  register: delete_iscsi_initator_config
+#  with_items:
+#    - "initiatorname.iscsi"
+#    - "iscsid.conf"
+

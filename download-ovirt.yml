@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Download Download Software Binaries and Save the into Ansible Files Directory
+      become: true
+      vars:
+        okd_download_version: "{{ _okd.major_version }}.{{ _okd.minor_version }}.{{ _okd.patch_version }}-{{ _okd.build_version }}-{{ _okd.release_date }}"
+        local_dir: "/home/jomoon/OKD"
+      get_url:
+        url: "{{ _okd.download_url }}/{{ okd_download_version }}/{{ item }}-{{ okd_download_version }}.tar.gz"
+        dest: "{{ local_dir }}/roles/okd/files/{{ item }}-{{ okd_download_version }}.tar.gz"
+      with_items:
+        - "openshift-install-linux"
+        - "openshift-client-linux"
+        - "ccoctl-linux"
+      tags: download
+

@@ -1,0 +1,47 @@
+---
+- name: Configure Samba Share
+  lineinfile:
+    path: "/etc/samba/smb.conf"
+    insertafter: "^[ \t]cups options =*"
+    line: "{{ item.line }}"
+  register: config_samba_share
+  with_items:
+    - { line: "        clustering = yes",            state: present }
+    - { line: "        kernel share modes = no",     state: present }
+    - { line: "        kernel oplocks = no",         state: present }
+    - { line: "        map archive = no",            state: present }
+    - { line: "        map hidden = no",             state: present }
+    - { line: "        map read only = no",          state: present }
+    - { line: "        map system = no",             state: present }
+    - { line: "        store dos attributes = yes",  state: present }
+- debug: msg={{ config_samba_share }}
+
+
+# It should be only run once since it is duplicated when running multiple times
+- name: Multiline Match and Append Lines
+  replace: >
+    dest="/etc/samba/smb.conf"
+    regexp="^(kernel share modes = no\n)(?!{{ item.line }})"
+    replace="\1{{ item.line }}\n"
+  with_items:
+    - { line: "writable = yes" }
+    - { line: "valid users = @smbgroup" }
+    - { line: "force create mode = 777" }
+    - { line: "force directory mode = 777" }
+    - { line: "inherit permissions = yes" }
+- debug: msg={{ config_samba_share }}
+
+
+# Same Effect with Above Task
+#- name: Enable Samba Share
+#  replace:
+#    path: "/etc/samba/smb.conf"
+#    regexp: "^kernel share modes =*"
+#    replace: |-
+#      kernel share modes = no
+#      writable = yes
+#      valid users = @smbgroup
+#      force create mode = 777
+#      force directory mode = 777
+#      inherit permissions = yes
+

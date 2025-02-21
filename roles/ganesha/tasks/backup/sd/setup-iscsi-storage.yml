@@ -1,0 +1,52 @@
+---
+#- name: Connect iSCSI Target
+#  ovirt_storage_connection:
+#    storage: myiscsi
+#    address: 192.168.2.176
+#    target: "{{ _iscsi.target.iqn }}:{{ _iscsi.target.os_version }}.{{ _iscsi.target.disks[0].name }}"
+#    username: iscsiadm
+#    password: changeme
+#    port: 3260
+#    type: iscsi
+#    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Unattached iSCSI Storage Domain
+  ovirt_storage_domain:
+    state: unattached
+    name: jiscsi-storage01
+    host: co9-node03
+    data_center: Default
+    storage_format: v4
+    wait: true
+    iscsi:
+      target: "{{ _iscsi.target.iqn }}:{{ _iscsi.target.os_version }}.{{ _iscsi.target.disks[0].name }}"
+      lun_id:
+        - "{{ oe_sd_lun_id }}"
+      address: 192.168.2.176
+      port: 3260
+      username: "{{ _iscsi.target.user }}"
+      password: "{{ _iscsi.target.password }}"
+    auth: "{{ _ovirt.engine.auth }}"
+
+# 360014057254c41327f24a03a90094347
+# 36001405cb3b53033e23409c9bd8bb684
+
+
+- name: Activate iSCSI Storage Domain
+  ovirt_storage_domain:
+    host: co9-node03
+    data_center: Default
+    name: jiscsi-storage01
+    wait: true
+    state: present
+    auth: "{{ _ovirt.engine.auth }}"
+
+
+- name: Get iSCSI Storage Domain Info
+  ovirt_storage_domain_info:
+    pattern:
+      name: jiscsi-storage01
+    auth: "{{ _ovirt.engine.auth }}"
+  register: storage_domain_details
+

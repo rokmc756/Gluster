@@ -1,0 +1,10 @@
+---
+- name: Create Locaal Storage Domain
+  ovirt_storage_domain:
+    name: jlocal-storage01
+    host: co9-node04
+    data_center: Default
+    localfs:
+      path: /ovirt-local-dir
+    auth: "{{ _ovirt.engine.auth }}"
+

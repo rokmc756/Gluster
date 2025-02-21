@@ -1,0 +1,34 @@
+---
+- name: Check OS ( NFS )
+  fail: msg="Not a Red Hat or SuSE based system!"
+  when: ansible_os_family != 'RedHat' or  ansible_os_family != 'CentOS' or  ansible_os_family != 'Rocky'
+
+
+- name: Set Facts For Network and Packages Informations
+  import_tasks: set-nfs-facts.yml
+  tags: install, uninstall, deploy, destory, setup, remove
+
+
+- name: Setup NFS Server
+  import_tasks: setup-nfs-server.yml
+  tags: setup, install
+  when: ( server is defined and server == true ) and inventory_hostname in groups['nfs']
+
+
+- name: Setup NFS Client
+  import_tasks: setup-nfs-client.yml
+  tags: setup, install
+  when: ( client is defined and client == true ) and inventory_hostname in groups['engine']
+
+
+- name: Remove NFS Client
+  import_tasks: remove-nfs-client.yml
+  tags: remove, uninstall
+  when: ( client is defined and client == true ) and inventory_hostname in groups['engine']
+
+
+- name: Remove NFS Server
+  import_tasks: remove-nfs-server.yml
+  tags: remove, uninstall
+  when: ( server is defined and server == true ) and inventory_hostname in groups['nfs']
+

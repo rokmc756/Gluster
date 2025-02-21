@@ -1,0 +1,77 @@
+---
+- name: Check OS ( Postgres )
+  fail: msg="Not a Red Hat based system!"
+  when: ansible_os_family != 'RedHat' or ansible_os_family != 'CentOS' or  ansible_os_family != 'Rocky'
+
+
+- name: Set Facts for Package Name and List and Network Device/Address Range
+  import_tasks: set-facts.yml
+  tags: install, uninstall, setup, remove, init, uninit, enable, disable, add, create, delete
+  when: inventory_hostname in groups['database']
+
+
+- name: Disable Firewalld
+  import_tasks: disable-firewall.yml
+  tags: disable, install
+  when: (( firewall is defined and firewall == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Install Common Prerequisties and Postgres RPM Packages For Single Instance
+  import_tasks: install-pkgs.yml
+  tags: setup, install
+  when: (( pkgs is defined and pkgs == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Initialize Postgres Instance
+  import_tasks: init-pgsql.yml
+  tags: init, install
+  when: (( postgres is defined and postgres == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Add Postgres Parameters for oVirt
+  import_tasks: change-ovirt-parameters.yml
+  tags: add, install
+  when: (( ovirt is defined and ovirt == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Enable SSL for Single Postgres
+  import_tasks: enable-ssl.yml
+  tags: enable, install
+  when: (( ssl is defined and ssl == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Add User into PstgreSQL
+  import_tasks: add-users.yml
+  tags: add, install
+  when: (( user is defined and user == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Check the Status of Single PostgreSQL
+  import_tasks: check-status.yml
+  tags: install
+  when: ( postgres_all is defined and postgres_all == true ) and inventory_hostname in groups['database']
+
+
+- name: Recreate oVirt Database
+  import_tasks: recreate-ovirt-db.yml
+  tags: recreate, uninstall
+  when: ( db is defined and db == true ) and inventory_hostname in groups['database']
+
+
+- name: Uninstall RPM Packages for PostgreSQL
+  import_tasks: uninstall.yml
+  tags: remove, delete, uninstall
+  when: (( postgres is defined and postgres == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Enable Firewalld
+  import_tasks: enable-firewall.yml
+  tags: enable, uninstall
+  when: (( firewall is defined and firewall == true ) or ( postgres_all is defined and postgres_all == true )) and inventory_hostname in groups['database']
+
+
+- name: Upgrade RPM Packages for PostgreSQL
+  import_tasks: upgrade.yml
+  tags: upgrade
+  when: inventory_hostname in groups['database']
+

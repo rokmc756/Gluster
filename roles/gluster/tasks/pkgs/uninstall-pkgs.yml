@@ -1,0 +1,20 @@
+---
+- name: Uninstall Packages
+  package:
+    name: "{{ item }}"
+    state: absent
+  register: uninstall_pkgs
+  ignore_errors: true
+  with_items:
+    - glusterfs-server
+
+
+#- name: Delete Remaining oVirt Engine Directory
+#  file:
+#    path: "/etc/{{ item }}"
+#    state: absent
+#  register: delete_directory
+#  ignore_errors: true
+#  with_items:
+#    - "ovirt-engine"
+

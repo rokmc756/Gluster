@@ -1,0 +1,7 @@
+---
+- name: Stop and Disable NFS Ganesha
+  systemd:
+    name: nfs-ganesha
+    state: stopped
+    enabled: no
+

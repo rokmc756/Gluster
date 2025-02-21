@@ -1,0 +1,66 @@
+---
+- name: Create Directory for Samba Mount
+  file:
+    path: "{{ item.mount_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+    recurse: yes
+  register: create_smb_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ create_smb_dir }}
+  when: print_debug == true
+
+
+- name: Mount Ephemeral GlusterFS Volume
+  mount:
+    src: "{{ hostvars[inventory_hostname].ansible_hostname }}:/{{ item.name }}"
+    path: "{{ item.mount_dir }}"
+    opts: ""
+    fstype: glusterfs
+    state: ephemeral
+  register: mount_glusterfs_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ mount_glusterfs_dir }}
+  when: print_debug == true
+
+
+- name: Create Directory Mounted
+  file:
+    path: "{{ item.mount_dir }}/{{ item.smbshare }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+    recurse: yes
+  register: create_smb_share_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ create_smb_share_dir }}
+  when: print_debug == true
+
+
+- name: Ensure Group "smbgroup" Exists
+  group:
+    name: smbgroup
+    state: present
+
+
+- name: Change Group for Directory Mounted
+  shell: |
+    chgrp smbgroup {{ item.mount_dir }}/{{ item.smbshare }}
+  register: change_group
+  with_items: "{{ _volumes }}"
+- debug: msg={{ change_group }}
+  when: print_debug == true
+
+
+- name: Umount Directory Mounted
+  shell: |
+    umount {{ item.mount_dir }}
+  register: unmount_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ unmount_dir }}
+  when: print_debug == true
+
+

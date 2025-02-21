@@ -1,0 +1,47 @@
+---
+- name: Copy CTDB Config File
+  template:
+    dest: "/etc/ctdb/{{ item }}"
+    src: "{{ item }}.j2"
+    owner: root
+    group: root
+    mode: 0644
+  register: copy_ctdb_conf
+  with_items:
+    - "nodes"
+    - "public_addresses"
+- debug: msg={{ copy_ctdb_conf }}
+
+
+- name: Restart CTDB Services
+  systemd:
+    name: "{{ item.service }}"
+    state: "{{ item.state }}"
+    enabled: true
+    daemon_reload: true
+  register: restart_service
+  until: restart_service is succeeded
+  retries: 10
+  delay: 10
+  with_items:
+    - { service: ctdb, state: restarted }
+- debug: msg={{ restart_service }}
+  when: print_debug == true
+
+
+- name: Confirm CTDB Status
+  shell: |
+    ctdb status
+  register: confirm_ctdb_status
+- debug: msg={{ confirm_ctdb_status }}
+  when: print_debug == true
+
+
+- name: Confirm CTDB IP
+  shell: |
+    ctdb ip
+  register: confirm_ctdb_ip
+- debug: msg={{ confirm_ctdb_ip }}
+  when: print_debug == true
+
+

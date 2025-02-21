@@ -1,0 +1,41 @@
+---
+- name: Create Directory to Mount NFS
+  file:
+    path: "{{ item.mount_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+    recurse: yes
+  register: create_nfs_dir
+  with_items: "{{ _nfs.client }}"
+- debug: msg={{ create_nfs_dir }}
+  when: print_debug == true
+
+
+- name: Mount Ephemeral NFS volume
+  mount:
+    src: "{{ item.nfs_server_ip }}:{{ item.src }}"
+    path: "{{ item.mount_dir }}"
+    opts: ""
+    fstype: nfs
+    state: ephemeral
+  register: mount_nfs_dir
+  with_items: "{{ _nfs.client }}"
+- debug: msg={{ mount_nfs_dir }}
+  when: print_debug == true
+
+
+- name: Conditionally Create a File if it does not Exist
+  copy:
+    content: "Hellow Ceph NFS World!"
+    dest: "{{ item.mount_dir }}/test-nfs01.txt"
+    force: no
+    owner: root
+    group: root
+    mode: 0644
+  register: copy_file
+  with_items: "{{ _nfs.client }}"
+- debug: msg={{ copy_file }}
+  when: print_debug == true
+

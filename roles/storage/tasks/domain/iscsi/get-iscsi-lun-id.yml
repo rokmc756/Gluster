@@ -1,0 +1,51 @@
+---
+- name: Discovery iSCSI Target
+  shell: |
+    iscsiadm -m discovery -t sendtargets -p {{ hostvars[groups['iscsi'][0]].ansible_ssh_host }}
+  register: discovery_iscsi_target
+
+
+- name: Login iSCSI Node
+  shell: |
+    iscsiadm -m node --login -p {{ hostvars[groups['iscsi'][0]].ansible_ssh_host }}
+  register: login_iscsi_node
+
+
+- name: Wait for iSCSI LUN Device is Up
+  shell: |
+    fdisk -l | grep -B 1 'Disk model: {{ _iscsi.target.disks[0].name }}'
+  register: iscsi_lun_device_up
+  until: _iscsi.target.disks[0].name in iscsi_lun_device_up.stdout
+  retries: 5
+  delay: 10
+
+
+- name: Get LUN ID
+  shell: |
+    lsblk | grep -A 1 $(fdisk -l | grep -B 1 'Disk model: {{ _iscsi.target.disks[0].name }}' | sed 2d | \
+    awk '{print $2}' | cut -d : -f 1 | cut -d '/' -f 3) | sed 1d | awk '{print $1}' | sed $'s/[^[:alnum:]\t]//g'
+  register: get_lun_id
+
+
+- name: Set Facts for LUN ID
+  set_fact:
+    oe_sd_lun_id: "{{ get_lun_id.stdout }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  with_items:
+    - "{{ groups['iscsi'] }}"
+    - "{{ groups['engine'] }}"
+    - "{{ groups['initiator'] }}"
+
+
+- name: Logout iSCSI Node
+  shell: |
+    iscsiadm -m node --logout -p {{ hostvars[groups['iscsi'][0]].ansible_ssh_host }}
+  register: logout_iscsi_node
+
+
+- debug: msg={{ oe_sd_lun_id }}
+
+
+- import_tasks: domain/iscsi/fail-get-lun-id.yml
+

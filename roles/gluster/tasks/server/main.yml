@@ -1,0 +1,24 @@
+---
+- name: Start Gluster Server
+  import_tasks: server/start-gluster-server.yml
+  tags: start, enable, install
+  when: inventory_hostname in groups['workers']
+
+
+- name: Probe Gluster Nodes
+  import_tasks: server/probe-gluster-nodes.yml
+  tags: probe, start, enable, install
+  when: ( peer is defined and peer == true ) and inventory_hostname in groups['control']
+
+
+- name: Detach Gluster Nodes
+  import_tasks: server/detach-gluster-nodes.yml
+  tags: detach, stop, disable, uninstall
+  when: ( peer is defined and peer == true ) and inventory_hostname in groups['control']
+
+
+- name: Stop Gluster Server
+  import_tasks: server/stop-gluster-server.yml
+  tags: stop, disable, uninstall
+  when: inventory_hostname in groups['workers']
+

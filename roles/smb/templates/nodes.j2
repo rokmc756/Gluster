@@ -1,0 +1,3 @@
+{% for h in groups["workers"] %}
+{{ hostvars[h][_netdev]['ipv4']['address'] }}
+{% endfor %}

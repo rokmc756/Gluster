@@ -1,0 +1,36 @@
+---
+_dc:
+  - { name: jDC01, compat_ver: "4.7", desc: "Jack's oVirt KR Datacenter" }
+
+
+_cluster:
+  - { name: jClu01, dc: jDC01, cpu_type: 'Intel SandyBridge Family', compat_ver: "4.7", desc: "Jack's oVirt KR Cluster" }
+
+
+_sd:
+  nfs:
+    name: jnfs-sd01
+  iscsi:
+    name: jiscsi-sd01
+  local:
+    name: jlocal-sd01
+
+
+_nfs:
+  root_dir: "/ovirt-nfs-root"
+  mode: "0777"
+  client:
+    - { mount_dir: "/ovirt-nfs-mount", src: "/ovirt-nfs-root", nfs_server_ip: "{{ hostvars[groups['nfs'][0]].ansible_ssh_host }}"  }
+
+
+_iscsi:
+  target:
+    iqn: "iqn.2025-02.io.pivotal.jtest"
+    user: iscsiadm
+    password: changeme
+    os_version: "co9"
+    disks:
+      - { name: "jtest-vdisk01", base_dir: "/data/iscsi01", size: "10G" }
+      - { name: "jtest-vdisk02", base_dir: "/data/iscsi02", size: "10G" }
+      - { name: "jtest-vdisk03", base_dir: "/data/iscsi03", size: "10G" }
+

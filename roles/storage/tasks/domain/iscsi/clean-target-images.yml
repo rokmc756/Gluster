@@ -1,0 +1,67 @@
+---
+# $ dmsetup info /dev/mapper/36001405cb3b53033e23409c9bd8bb684
+# $ dmsetup remove /dev/mapper/36001405cb3b53033e23409c9bd8bb684
+
+# $ lsof | grep $(dmsetup info /dev/mapper/36001405cb3b53033e23409c9bd8bb684 | grep -e "^Major" | cut -d : -f 2 | xargs | tr -d ' ')
+# $ kill -9 <process_id>
+
+
+
+- name: Clean Target Image Disks
+  shell: |
+    dd if=/dev/zero of=/data/{{ item }} bs=4k count=1024
+  register: clean_target_image_disks
+  with_items:
+    - "iscsi01/jtest-vdisk01.img"
+    - "iscsi02/jtest-vdisk02.img"
+    - "iscsi03/jtest-vdisk03.img"
+
+
+###########################################################################################################
+# $ lsblk
+# NAME                                                MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINTS
+# sr0                                                  11:0    1 11.2G  0 rom
+# vda                                                 252:0    0  100G  0 disk
+# ├─vda1                                              252:1    0    1G  0 part  /boot
+# └─vda2                                              252:2    0   99G  0 part
+#   ├─cs-root                                         253:0    0 61.2G  0 lvm   /
+#   ├─cs-swap                                         253:1    0  7.9G  0 lvm   [SWAP]
+#   └─cs-home                                         253:2    0 29.9G  0 lvm   /home
+# vdb                                                 252:16   0  100G  0 disk
+# vdc                                                 252:32   0  100G  0 disk
+# 36001405cb3b53033e23409c9bd8bb684                   253:3    0   10G  0 mpath
+# ├─fe66df5e--7e8b--4935--ba00--e8828ee9cb57-metadata 253:4    0  128M  0 lvm
+# ├─fe66df5e--7e8b--4935--ba00--e8828ee9cb57-ids      253:5    0  128M  0 lvm
+# ├─fe66df5e--7e8b--4935--ba00--e8828ee9cb57-inbox    253:6    0  128M  0 lvm
+# ├─fe66df5e--7e8b--4935--ba00--e8828ee9cb57-outbox   253:7    0  128M  0 lvm
+# ├─fe66df5e--7e8b--4935--ba00--e8828ee9cb57-leases   253:8    0    2G  0 lvm
+# ├─fe66df5e--7e8b--4935--ba00--e8828ee9cb57-xleases  253:9    0    1G  0 lvm
+# └─fe66df5e--7e8b--4935--ba00--e8828ee9cb57-master   253:10   0    1G  0 lvm
+#
+# $ rm -f /dev/mapper/fe66df5e--7e8b--4935--ba00--e8828ee9cb57-*
+
+
+# multipathd del map /dev/mapper/36001405cb3b53033e23409c9bd8bb684
+# fail
+
+
+# dmsetup ls
+# 36001405cb3b53033e23409c9bd8bb684       (253:3)
+# ~~ snip
+# fe66df5e--7e8b--4935--ba00--e8828ee9cb57-ids    (253:5)
+# fe66df5e--7e8b--4935--ba00--e8828ee9cb57-inbox  (253:6)
+# fe66df5e--7e8b--4935--ba00--e8828ee9cb57-leases (253:8)
+# fe66df5e--7e8b--4935--ba00--e8828ee9cb57-master (253:10)
+# fe66df5e--7e8b--4935--ba00--e8828ee9cb57-metadata       (253:4)
+#
+# ~~ snip
+# dmsetup remove fe66df5e--7e8b--4935--ba00--e8828ee9cb57-metadata
+# dmsetup remove fe66df5e--7e8b--4935--ba00--e8828ee9cb57-master
+# dmsetup remove fe66df5e--7e8b--4935--ba00--e8828ee9cb57-leases
+# dmsetup remove /dev/mapper/36001405cb3b53033e23409c9bd8bb684
+#
+#
+# Above command line will remove clealy remaining device mapper files
+
+
+

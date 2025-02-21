@@ -1,0 +1,7 @@
+---
+- name: Install Package
+  package:
+    name: nfs-ganesha-gluster
+    state: present
+  register: install_pkgs
+

@@ -1,0 +1,178 @@
+---
+- name: Download OpenShift Install Clients
+  get_url:
+    url: "{{ _okd.download_url }}/{{ okd_version }}/{{ item }}-{{ okd_version }}.tar.gz"
+    dest: "{{ _okd.base_path }}/{{ item }}-{{ okd_version }}.tar.gz"
+    owner: root
+    group: root
+    mode: 0644
+  register: download_okd_install_clients
+  with_items:
+    - openshift-client-linux
+    - openshift-install-linux
+    - ccoctl-linux
+  when: _okd.download_client == true
+- debug: msg={{ download_okd_install_clients }}
+  when: print_debug == true and _okd.download_client == true
+
+
+- name: Upload OpenShift Install Clients
+  copy: src={{ item }}-{{ okd_version }}.tar.gz dest={{ _okd.base_path }}/{{ item }}-{{ okd_version }}.tar.gz mode=0644 owner=root group=root
+  register: upload_okd_install_clients
+  with_items:
+    - openshift-client-linux
+    - openshift-install-linux
+    - ccoctl-linux
+  when: _okd.download_client == false
+- debug: msg={{ upload_okd_install_clients }}
+  when: print_debug == true and _okd.download_client == false
+
+
+- name: Extract OpenShift Install Clients
+  unarchive:
+    src: "{{ _okd.base_path }}/{{ item }}-{{ okd_version }}.tar.gz"
+    dest: "/usr/local/bin/"
+    mode: 0755
+    owner: root
+    group: root
+    remote_src: true
+  register: extract_okd_install_clients
+  with_items:
+    - openshift-client-linux
+    - openshift-install-linux
+    - ccoctl-linux
+- debug: msg={{ extract_okd_install_clients }}
+  when: print_debug == true
+
+
+- name: Set SELinux Policy
+  shell: |
+    restorecon -RFv /usr/local/bin/*
+  register: set_selinux_policy
+  args:
+    chdir: "{{ _okd.base_path }}"
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+- debug: msg={{ set_selinux_policy }}
+  when: print_debug == true
+
+
+- name: Check OKD Version
+  shell: |
+    oc version
+  register: check_oc_version
+  args:
+    chdir: "{{ _okd.base_path }}"
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+- debug: msg={{ check_oc_version }}
+  when: print_debug == true
+
+
+- name: Create Directory for Ignition File
+  file:
+    path: "{{ _okd.base_path }}/okd4"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  register: create_ignition_dir
+- debug: msg={{ create_ignition_dir }}
+  when: print_debug == true
+
+
+- name: Copy Config Files for Ignition File
+  template:
+    dest: "{{ _okd.base_path }}/okd4/{{ item }}.yaml"
+    src: "{{ item }}.yaml.j2"
+  register: copy_ignition_file
+  with_items:
+    - "install-config"
+- debug: msg={{ copy_ignition_file }}
+
+
+- name: Copy Config Files for Ignition File
+  template:
+    dest: "{{ _okd.base_path }}/{{ item }}"
+    src: "{{ item }}.j2"
+  register: copy_ignition_file
+  with_items:
+    - "install-config.yaml"
+- debug: msg={{ copy_ignition_file }}
+
+
+- name: Create OKD Manifests
+  shell: |
+    openshift-install create manifests --dir=okd4 --log-level=debug
+  register: create_okd_manifests
+  args:
+    chdir: "{{ _okd.base_path }}"
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+- debug: msg={{ create_okd_manifests }}
+  when: print_debug == true
+
+
+- name: Create ODK Ignition Configs
+  shell: |
+    openshift-install create ignition-configs --dir=okd4 --log-level=debug
+  register: create_okd_ignition_configs
+  args:
+    chdir: "{{ _okd.base_path }}"
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+- debug: msg={{ create_okd_ignition_configs }}
+  when: print_debug == true
+
+
+- name: Copy Ignition File
+  shell: |
+    cp ./okd4/{bootstrap.ign,master.ign,worker.ign} /usr/share/nginx/html/
+  register: copy_ignition_file
+  args:
+    chdir: "{{ _okd.base_path }}"
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+- debug: msg={{ copy_ignition_file }}
+  when: print_debug == true
+
+
+- name: Change Ignition File Permission
+  shell: |
+    chmod 644 /usr/share/nginx/html/{bootstrap.ign,master.ign,worker.ign}
+  register: change_ignition_file_permission
+  args:
+    chdir: "{{ _okd.base_path }}"
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+- debug: msg={{ change_ignition_file_permission }}
+  when: print_debug == true
+
+
+- name: Set SELinux Policy
+  shell: |
+    restorecon -RFv /usr/share/nginx/html/*
+  register: set_selinux_policy
+  args:
+    chdir: "{{ _okd.base_path }}"
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+- debug: msg={{ set_selinux_policy }}
+  when: print_debug == true
+
+
+# Verify that our API is resolvable from current shell.
+# If any of the DNS entries cannot be resolved,
+# the installation will fail. Ensure that DNS resolution issues are resolved before proceeding.
+
+#- name: Verify that our API is resolvable
+#  shell: |
+#    curl -v https://api.okd4.pivotal.io:6443
+#  register: verify_api_resolvable
+#  args:
+#    chdir: "{{ _okd.base_path }}"
+#  environment:
+#    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+#- debug: msg={{ verify_api_resolvable ]]
+#  when: print_debug == true
+

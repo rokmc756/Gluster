@@ -1,0 +1,57 @@
+---
+- name: Check OS ( iSCSI )
+  fail: msg="Not a Red Hat or SuSE based system!"
+  when:
+    - ansible_os_family != 'RedHat' or  ansible_os_family != 'CentOS' or  ansible_os_family != 'Rocky'
+    - inventory_hostname in groups['iscsi'] or nventory_hostname in groups['engine']
+
+
+- name: Set Facts For Network and Packages Informations
+  import_tasks: set-iscsi-facts.yml
+  tags: install, uninstall, create, delete, setup, remove
+  when: inventory_hostname in groups['iscsi'] or inventory_hostname in groups['engine']
+
+
+- name: Install iSCSI Target In Less Version Than RHEL/Rocky/CentOS 8.x
+  import_tasks: rh7/install-target.yml
+  tags: create, setup, install
+  when:
+    - ( target is defined and target == true ) and inventory_hostname in groups['iscsi']
+    - ( ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or ansible_distribution == "Rocky" ) and ansible_distribution_major_version|int < 8
+
+
+- name: Uninstall iSCSI Target In Less Version Than RHEL/Rocky/CentOS 8.x
+  import_tasks: rh7/uninstall-target.yml
+  tags: uninstall, remove, delete
+  when:
+    - ( target is defined and target == true ) and inventory_hostname in groups['iscsi']
+    - ( ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or ansible_distribution == "Rocky" ) and ansible_distribution_major_version|int < 8
+
+
+- name: Install iSCSI Target In Higher Version Than RHEL/Rocky/CentOS 8.x
+  import_tasks: rh8/install-target.yml
+  tags: create, setup, install
+  when:
+    - ( target is defined and target == true ) and inventory_hostname in groups['iscsi']
+    - ( ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or ansible_distribution == "Rocky" ) and ansible_distribution_major_version|int >= 8
+
+
+- name: Uninstall iSCSI Target In Higher Version Than RHEL/Rocky/CentOS 8.x
+  import_tasks: rh8/uninstall-target.yml
+  tags: uninstall, remove, delete
+  when:
+    - ( target is defined and target == true ) and inventory_hostname in groups['iscsi']
+    - ( ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or ansible_distribution == "Rocky" ) and ansible_distribution_major_version|int >= 8
+
+
+- name: Install iSCSI Initiator
+  import_tasks: install-initiator.yml
+  tags: create, setup, install
+  when: ( initiator is defined and initiator == true ) and inventory_hostname in groups['engine']
+
+
+- name: Uninstall iSCSI Initiator
+  import_tasks: uninstall-initiator.yml
+  tags: uninstall, remove, delete
+  when: ( initiator is defined and initiator == true ) and inventory_hostname in groups['engine']
+
