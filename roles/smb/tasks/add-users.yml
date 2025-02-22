@@ -1,0 +1,93 @@
+---
+- name: Create OS group
+  group:
+    name: smbshare
+    state: present
+    system: no
+
+
+- name: Create OS user
+  user:
+    name: cent
+    group: smbshare
+    createhome: no
+    system: no
+    state: present
+    shell: /sbin/nologin
+
+
+#- name: Create cent User
+#  user:
+#    name: cent
+#    state: present
+#    password: "{{ 'changeme' | password_hash('sha512','A512') }}"
+#    shell: /bin/bash
+#    group: smbshare
+#    createhome: yes
+#    home: /home/cent
+
+
+- name: Fetch Current Smbpasswd Users
+  command: /usr/bin/pdbedit -L
+  register: pdb_users
+
+
+- name: Set Samba Password for cent user
+  command:
+    cmd: /usr/bin/smbpasswd -s -a cent
+    stdin: |
+      changeme
+      changeme
+  # when: pdb_users.stdout.find('cent') == -1
+  vars:
+    smbuser_password: changeme
+
+
+#- name: Set Samba password for smbuser
+#  shell: echo '{{ smbuser_password }}' | /usr/bin/smbpasswd -s -a smbuser
+#  when: pdb_users.stdout.find('smbuser') == -1
+#  vars:
+#    smbuser_password: !vault |
+#          $ANSIBLE_VAULT;1.1;AES256
+#          123456encryptedblah
+#          goeshere123456
+
+
+
+- name: Change SELinux Policy If It is Enabled
+  shell: |
+    setsebool -P {{ item.name }} {{ item.toggle }}
+  register: change_selinux_policy
+  with_items:
+    - { name: "use_fusefs_home_dirs",        toggle: "on" }
+    - { name: "samba_load_libgfapi",         toggle: "on" }
+    - { name: "domain_kernel_load_modules",  toggle: "on" }
+    - { name: "samba_export_all_rw",  toggle: "on" }
+- debug: msg={{ change_selinux_policy }}
+  when: print_debug == true
+
+
+- name: Allow Samba Service
+  shell: |
+    firewall-cmd --add-service={samba,ctdb} --permanent
+    firewall-cmd --reload
+  register: allow_samba_service
+- debug: msg={{ allow_samba_service }}
+  when: print_debug == true
+
+
+- name: Restart Samba Services
+  systemd:
+    name: "{{ item.service }}"
+    state: "{{ item.state }}"
+    enabled: true
+    daemon_reload: true
+  register: restart_service
+  until: restart_service is succeeded
+  retries: 3
+  delay: 10
+  with_items:
+    - { service: smb, state: restarted }
+- debug: msg={{ restart_service }}
+  when: print_debug == true
+

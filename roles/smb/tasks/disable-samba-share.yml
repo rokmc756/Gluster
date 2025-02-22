@@ -7,7 +7,7 @@
   register: delete_samba_share
   with_items:
     - { regexp: "^writable = yes" }
-    - { regexp: "^valid users = @smbgroup" }
+    - { regexp: "^valid users = @smbshare" }
     - { regexp: "^force create mode = 777" }
     - { regexp: "^force directory mode = 777" }
     - { regexp: "^inherit permissions = yes" }

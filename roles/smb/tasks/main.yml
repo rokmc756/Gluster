@@ -40,13 +40,19 @@
 - name: Config Samba Share
   import_tasks: enable-samba-share.yml
   tags: config, install
-  when: ( samba is defined and samba == true ) and inventory_hostname in groups['control']
+  when: ( samba is defined and samba == true ) and inventory_hostname in groups['workers']
 
 
 - name: Disable Samba Share
   import_tasks: disable-samba-share.yml
   tags: disable, install
-  when: ( samba is defined and samba == true ) and inventory_hostname in groups['control']
+  when: ( samba is defined and samba == true ) and inventory_hostname in groups['workers']
+
+
+- name: Add Users
+  import_tasks: add-users.yml
+  tags: add, install
+  when: ( user is defined and user == true ) and inventory_hostname in groups['workers']
 
 
 

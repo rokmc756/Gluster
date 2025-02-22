@@ -25,7 +25,7 @@
     replace="\1{{ item.line }}\n"
   with_items:
     - { line: "writable = yes" }
-    - { line: "valid users = @smbgroup" }
+    - { line: "valid users = @smbshare" }
     - { line: "force create mode = 777" }
     - { line: "force directory mode = 777" }
     - { line: "inherit permissions = yes" }
@@ -40,7 +40,7 @@
 #    replace: |-
 #      kernel share modes = no
 #      writable = yes
-#      valid users = @smbgroup
+#      valid users = @smbshare
 #      force create mode = 777
 #      force directory mode = 777
 #      inherit permissions = yes

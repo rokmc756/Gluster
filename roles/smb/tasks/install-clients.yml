@@ -39,3 +39,21 @@
     group: root
     mode: 0644
 
+
+#- name: Mount network share
+#  mount:
+#    src: //path/to/windows/share
+#    path: /mnt
+#    fstype: cifs
+#    opts: 'username=example@domain,password=Password1!'
+#    state: mounted
+#  become: true
+
+
+#- name: Unmount network share
+#  mount:
+#    path: /mnt
+#    state: absent
+#  become: true
+
+

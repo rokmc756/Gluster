@@ -1,0 +1,6 @@
+mkdir /mnt/distrovol01
+
+mount -t cifs -o vers=3.0,username=cent,password=changeme //192.168.2.171/gluster-distvol01 /mnt/distvol01
+
+smbclient //192.168.2.171/gluster-distvol01 -U cent --password=changeme
+
