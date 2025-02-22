@@ -45,3 +45,53 @@
   register: confirm_volume_info
 - debug: msg={{ confirm_volume_info }}
 
+
+
+#######################################################################################
+# Replicaation Mode
+#######################################################################################
+# Create volume
+# $ gluster volume create vol_replica replica 3 transport tcp \
+# node01:/glusterfs/replica \
+# node02:/glusterfs/replica \
+# node03:/glusterfs/replica
+# volume create: vol_replica: success: please start the volume to access data
+
+
+#######################################################################################
+# Distributed Mode
+#######################################################################################
+# Create volume
+# $ gluster volume create vol_distributed transport tcp \
+# node01:/glusterfs/distributed \
+# node02:/glusterfs/distributed
+# volume create: vol_distributed: success: please start the volume to access data
+
+
+#######################################################################################
+# Distributed + Replication
+#######################################################################################
+# Create volume
+# $ gluster volume create vol_dist-replica replica 3 arbiter 1 transport tcp \
+# node01:/glusterfs/dist-replica \
+# node02:/glusterfs/dist-replica \
+# node03:/glusterfs/dist-replica \
+# node04:/glusterfs/dist-replica \
+# node05:/glusterfs/dist-replica \
+# node06:/glusterfs/dist-replica
+# volume create: vol_dist-replica: success: please start the volume to access data
+
+
+#######################################################################################
+# Dispersed Configuration
+#######################################################################################
+# Create volume
+# $ gluster volume create vol_dispersed disperse-data 4 redundancy 2 transport tcp \
+# node01:/glusterfs/dispersed \
+# node02:/glusterfs/dispersed \
+# node03:/glusterfs/dispersed \
+# node04:/glusterfs/dispersed \
+# node05:/glusterfs/dispersed \
+# node06:/glusterfs/dispersed
+# volume create: vol_dispersed: success: please start the volume to access data
+
