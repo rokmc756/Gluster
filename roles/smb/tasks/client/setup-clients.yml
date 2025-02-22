@@ -1,10 +1,10 @@
 ---
-- name: Install NFS Client Packages
+- name: Install Samba Client Packages
   package: name={{item}} state=present
   with_items:
-    - "nfs-utils"
-  register: install_nfs_pkgs
-- debug: msg={{ install_nfs_pkgs }}
+    - "samba-client"
+  register: install_samba_client_pkgs
+- debug: msg={{ install_samba_client_pkgs }}
   when: print_debug == true
 
 
@@ -16,18 +16,18 @@
     group: root
     mode: 0777
     recurse: yes
-  register: create_nfs_dir
+  register: create_samba_dir
   with_items: "{{ _volumes }}"
-- debug: msg={{ create_nfs_dir }}
+- debug: msg={{ create_samba_dir }}
   when: print_debug == true
 
 
 - name: Mount Ephemeral Gluster Volume
   mount:
-    src: "{{ hostvars[groups['control'][0]].ansible_ssh_host }}:/{{ item.name }}"
+    src: "//{{ hostvars[groups['control'][0]].ansible_ssh_host }}/gluster-{{ item.name }}"
     path: "{{ item.mount_dir }}"
-    opts: ""
-    fstype: nfs4
+    opts: "username={{ _smb.user }},password={{ _smb.user_pass }},domain={{ _gluster.domain }},vers={{ _smb.client.ver }}"
+    fstype: cifs
     state: ephemeral
   register: mount_nfs_dir
   with_items: "{{ _volumes }}"
@@ -37,7 +37,7 @@
 
 - name: Create a File with the Content
   copy:
-    content: "Hellow Gluster NFS World!"
+    content: "Hellow Gluster Samba World!"
     dest: "{{ item.mount_dir }}/{{ item.fn }}"
     force: no
     owner: root

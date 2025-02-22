@@ -1,0 +1,41 @@
+---
+- name: Create OS group
+  group:
+    name: "{{ _smb.group }}"
+    state: present
+    system: no
+
+
+- name: Create OS user
+  user:
+    name: "{{ _smb.user }}"
+    group: "{{ _smb.group }}"
+    createhome: no
+    system: no
+    state: present
+    shell: /sbin/nologin
+
+
+- name: Fetch Current Smbpasswd Users
+  command: /usr/bin/pdbedit -L
+  register: pdb_users
+
+
+- name: Set Samba Password for cent User
+  command:
+    cmd: /usr/bin/smbpasswd -s -a {{ _smb.user }}
+    stdin: |
+      {{ _smb.user_pass }}
+      {{ _smb.user_pass }}
+  # when: pdb_users.stdout.find('cent') == -1
+
+
+#- name: Set Samba password for smbuser
+#  shell: echo '{{ smbuser_password }}' | /usr/bin/smbpasswd -s -a smbuser
+#  when: pdb_users.stdout.find('smbuser') == -1
+#  vars:
+#    smbuser_password: !vault |
+#          $ANSIBLE_VAULT;1.1;AES256
+#          123456encryptedblah
+#          goeshere123456
+

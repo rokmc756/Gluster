@@ -15,45 +15,8 @@
 
 
 - name: Import Gluster Samba Playbook
-  import_tasks: server/main.yml
-  when: ( server is defined and server == true )
-
-
-- name: Enable Samba Mode
-  import_tasks: enable-samba-mode.yml
-  tags: enable, install
-  when: ( samba is defined and samba == true ) and inventory_hostname in groups['control']
-
-
-- name: Enable CTDB Mode
-  import_tasks: enable-ctdb.yml
-  tags: enable, install
-  when: ( ctdb is defined and ctdb == true ) and inventory_hostname in groups['workers']
-
-
-#- name: Config Samba
-#  import_tasks: config-samba.yml
-#  tags: config, install
-#  when: ( samba is defined and samba == true ) and inventory_hostname in groups['workers']
-
-
-- name: Config Samba Share
-  import_tasks: enable-samba-share.yml
-  tags: config, install
-  when: ( samba is defined and samba == true ) and inventory_hostname in groups['workers']
-
-
-- name: Disable Samba Share
-  import_tasks: disable-samba-share.yml
-  tags: disable, install
-  when: ( samba is defined and samba == true ) and inventory_hostname in groups['workers']
-
-
-- name: Add Users
-  import_tasks: add-users.yml
-  tags: add, install
-  when: ( user is defined and user == true ) and inventory_hostname in groups['workers']
-
+  import_tasks: samba/main.yml
+  when: ( samba is defined and samba == true )
 
 
 - name: Import Gluster Samba Clients Playbook
@@ -61,8 +24,8 @@
   when: ( client is defined and client == true )
 
 
-#- name: Setup NTP Service
-#  import_tasks: ext/setup-chrony.yml
-#  tags: setup, install
-#  when: ( ntp is defined and ntp == true )
+- name: Setup NTP Service
+  import_tasks: ext/setup-chrony.yml
+  tags: setup, install
+  when: ( ntp is defined and ntp == true )
 

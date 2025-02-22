@@ -1,0 +1,24 @@
+---
+- name: Disallow Samba Service
+  shell: |
+    firewall-cmd --remove-service={samba,ctdb} --permanent
+    firewall-cmd --reload
+  register: disallow_samba_service
+  ignore_errors: true
+- debug: msg={{ disallow_samba_service }}
+  when: print_debug == true
+
+
+- name: Disable Samba SELinux Policy
+  shell: |
+    setsebool -P {{ item.name }} {{ item.toggle }}
+  register: disable_samba_selinux_policy
+  ignore_errors: true
+  with_items:
+    - { name: "use_fusefs_home_dirs",        toggle: "off" }
+    - { name: "samba_load_libgfapi",         toggle: "off" }
+    - { name: "domain_kernel_load_modules",  toggle: "off" }
+    - { name: "samba_export_all_rw",  toggle: "off" }
+- debug: msg={{ disable_samba_selinux_policy }}
+  when: print_debug == true
+

@@ -1,7 +1,7 @@
 ---
 - name: Install Gluster Samba Package Repository
   package:
-    name: "centos-release-samba421"
+    name: "centos-release-samba{{ _smb.repo.ver }}"
     state: present
   register: install_repo_pkgs
 - debug: msg={{ install_repo_pkgs }}
@@ -16,13 +16,13 @@
     backup: "{{ item.backup }}"
   register: change_required_config
   with_items:
-    - { fn: "Samba-421",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
+    - { fn: "Samba-{{ _smb.repo.ver }}",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
   # when: ansible_os_family == 'Rocky' and ansible_distribution_major_version|int == 9
 
 
 - name: Enable Gluster Samba Repository
   shell: |
-    dnf config-manager --enable "centos-samba421"
+    dnf config-manager --enable "centos-samba{{ _smb.repo.ver }}"
   register: enable_gluster_repo
 - debug: msg={{ enable_gluster_repo }}
   when: print_debug == true

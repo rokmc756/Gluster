@@ -25,23 +25,10 @@
     replace="\1{{ item.line }}\n"
   with_items:
     - { line: "writable = yes" }
-    - { line: "valid users = @smbshare" }
+    - { line: "valid users = @{{ _smb.group }}" }
+    - { line: "force group = {{ _smb.group }}" }
     - { line: "force create mode = 777" }
     - { line: "force directory mode = 777" }
     - { line: "inherit permissions = yes" }
 - debug: msg={{ config_samba_share }}
-
-
-# Same Effect with Above Task
-#- name: Enable Samba Share
-#  replace:
-#    path: "/etc/samba/smb.conf"
-#    regexp: "^kernel share modes =*"
-#    replace: |-
-#      kernel share modes = no
-#      writable = yes
-#      valid users = @smbshare
-#      force create mode = 777
-#      force directory mode = 777
-#      inherit permissions = yes
 

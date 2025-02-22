@@ -1,0 +1,16 @@
+---
+- name: Restart Samba Services
+  systemd:
+    name: "{{ item.service }}"
+    state: "{{ item.state }}"
+    enabled: true
+    daemon_reload: true
+  register: restart_service
+  until: restart_service is succeeded
+  retries: 3
+  delay: 10
+  with_items:
+    - { service: smb, state: restarted }
+- debug: msg={{ restart_service }}
+  when: print_debug == true
+

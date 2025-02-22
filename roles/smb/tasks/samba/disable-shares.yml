@@ -7,11 +7,13 @@
   register: delete_samba_share
   with_items:
     - { regexp: "^writable = yes" }
-    - { regexp: "^valid users = @smbshare" }
+    - { regexp: "^valid users = @{{ _smb.group }}" }
+    - { regexp: "^force group = {{ _smb.group }}" }
     - { regexp: "^force create mode = 777" }
     - { regexp: "^force directory mode = 777" }
     - { regexp: "^inherit permissions = yes" }
 - debug: msg={{ delete_samba_share }}
+#    - { regexp: "^valid users = @smbshare" }
 
 
 - name: Delete Samba Share

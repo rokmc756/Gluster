@@ -1,0 +1,61 @@
+---
+- name: Stop Gluster Volume
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: stopped
+  register: stop_volumes
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ stop_volumes }}
+
+
+- name: Set Gluster Block Group
+  shell: |
+    gluster volume set {{ item.name }} group virt
+  register: set_gluster_block_group
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ set_gluster_block_group }}
+# cat /var/lib/glusterd/groups/gluster-block
+
+
+- name: Enable Performnce Write Behind
+  shell: |
+    gluster volume set {{ item.name }} performance.write-behind on
+  register: enable_perf_wb
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ enable_perf_wb }}
+
+
+- name: Disable SMB User Volume
+  shell: |
+    gluster volume set {{ item.name }} user.smb disable
+  register: disable_smb_user_volume
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ disable_smb_user_volume }}
+
+
+- name: Confirm Gluster Volume Status
+  shell: |
+    gluster volume status {{ item.name }}
+  register: confirm_volume_status
+  ignore_errors: true
+  until: "'not started' in confirm_volume_status.stderr"
+  retries: 10
+  delay: 10
+  failed_when: "'is not started' not in confirm_volume_status.stderr"
+  with_items: "{{ _volumes }}"
+- debug: msg={{ confirm_volume_status }}
+
+
+- name: Start Gluster Volume
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: started
+  register: start_volumes
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ start_volumes }}
+

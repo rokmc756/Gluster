@@ -196,6 +196,36 @@ $ make ganesha r=disable s=repo
 
 
 ## References
+### Instll SMB
+$ make smb r=enable s=repo
+$ make smb r=install s=pkgs
+
+$ make smb r=enable  s=samba  c=mode
+$ make smb r=enable  s=samba  c=ctdb
+$ make smb r=enable  s=samba  c=volume
+$ make smb r=enable  s=samba  c=share
+$ make smb r=add     s=samba  c=user
+$ make smb r=enable  s=samba  c=sec
+$ make smb r=start   s=samba  c=service
+
+$ make smb r=setup   s=samba  c=client
+
+
+or
+
+
+$ make smb r=remove  s=samba  c=client
+
+$ make smb r=stop    s=samba c=service
+$ make smb r=disable s=samba c=sec
+$ make smb r=delete  s=samba c=user
+$ make smb r=disable s=samba c=share
+$ make smb r=disable s=samba c=volume
+$ make smb r=disable s=samba c=ctdb
+$ make smb r=disable s=samba c=mode
+
+$ make smb r=uninstall  s=pkgs
+$ make smb r=disable    s=repo
 
 
 ## Similar Playbook

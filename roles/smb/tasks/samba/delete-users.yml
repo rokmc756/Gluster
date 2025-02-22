@@ -1,0 +1,45 @@
+---
+- name: Delete Samba User
+  command:
+    cmd: /usr/bin/smbpasswd -x {{ _smb.user }}
+  register: delete_samba_user
+  ignore_errors: true
+- debug: msg={{ delete_samba_user }}
+  when: print_debug == true
+#  stdin: |
+#    changeme
+#    changeme
+# when: pdb_users.stdout.find('{{ _smb.user }}') == -1
+#vars:
+#  smbuser_password: {{ _smb.user_pass }}
+
+
+- name: Fetch Current Smbpasswd Users
+  command: /usr/bin/pdbedit -L
+  register: pdb_users
+  ignore_errors: true
+- debug: msg={{ pdb_users }}
+  when: print_debug == true
+
+
+- name: Delete OS User
+  user:
+    name: "{{ _smb.user }}"
+    state: absent
+    remove: yes
+  register: delete_os_user
+  ignore_errors: true
+- debug: msg={{ delete_os_user }}
+  when: print_debug == true
+
+
+#- name: Delete OS Group
+#  group:
+#    name: "{{ _smb.group }}"
+#    state: absent
+#  register: delete_os_group
+#  ignore_errors: true
+#- debug: msg={{ delete_os_group }}
+#  when: print_debug == true
+
+

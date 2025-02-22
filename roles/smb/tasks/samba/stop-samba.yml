@@ -1,0 +1,16 @@
+---
+- name: Stop Samba Services
+  systemd:
+    name: "{{ item.service }}"
+    state: "{{ item.state }}"
+    enabled: true
+    daemon_reload: true
+  register: stop_service
+  until: stop_service is succeeded
+  retries: 3
+  delay: 10
+  with_items:
+    - { service: smb, state: stopped }
+- debug: msg={{ stop_service }}
+  when: print_debug == true
+

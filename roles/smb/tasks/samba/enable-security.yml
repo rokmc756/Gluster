@@ -1,0 +1,22 @@
+---
+- name: Change SELinux Policy If It is Enabled
+  shell: |
+    setsebool -P {{ item.name }} {{ item.toggle }}
+  register: change_selinux_policy
+  with_items:
+    - { name: "use_fusefs_home_dirs",        toggle: "on" }
+    - { name: "samba_load_libgfapi",         toggle: "on" }
+    - { name: "domain_kernel_load_modules",  toggle: "on" }
+    - { name: "samba_export_all_rw",  toggle: "on" }
+- debug: msg={{ change_selinux_policy }}
+  when: print_debug == true
+
+
+- name: Allow Samba Service
+  shell: |
+    firewall-cmd --add-service={samba,ctdb} --permanent
+    firewall-cmd --reload
+  register: allow_samba_service
+- debug: msg={{ allow_samba_service }}
+  when: print_debug == true
+

@@ -40,15 +40,15 @@
   when: print_debug == true
 
 
-- name: Ensure Group "smbgroup" Exists
+- name: Ensure Group "{{ _smb.group }}" Exists
   group:
-    name: smbgroup
+    name: "{{ _smb.group }}"
     state: present
 
 
 - name: Change Group for Directory Mounted
   shell: |
-    chgrp smbgroup {{ item.mount_dir }}/{{ item.smbshare }}
+    chgrp {{ _smb.group }} {{ item.mount_dir }}/{{ item.smbshare }}
   register: change_group
   with_items: "{{ _volumes }}"
 - debug: msg={{ change_group }}

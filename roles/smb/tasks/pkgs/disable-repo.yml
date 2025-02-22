@@ -7,13 +7,13 @@
     backup: "{{ item.backup }}"
   register: rollback_required_config
   with_items:
-    - { fn: "Samba-421",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
+    - { fn: "Samba-{{ _smb.repo.ver }}",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
   # when: ansible_os_family == 'Rocky' and ansible_distribution_major_version|int == 9
 
 
 - name: Disable Gluster Samba Repository
   shell: |
-    dnf config-manager --disable "centos-samba421"
+    dnf config-manager --disable "centos-samba{{ _smb.repo.ver }}"
   register: disable_gluster_repo
 - debug: msg={{ disable_gluster_repo }}
   when: print_debug == true
@@ -25,7 +25,7 @@
     state: absent
   register: uninstall_repo_pkgs
   with_items:
-    - "centos-release-samba421"
+    - "centos-release-samba{{ _smb.repo.ver }}"
 
 
 - name: Update Caches for DNF Packages

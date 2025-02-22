@@ -1,6 +1,17 @@
 ---
+_smb:
+  repo:
+    ver: "421"
+  group: "smbgroup"
+  user: "cent"
+  user_pass: "changeme"
+  client:
+    ver: "3.0"
+
+
 _volumes:
   - { name: "distvol01", brick: "/glusterfs/jbrick01", export_id: 101, mount_dir: "/mnt/smb-dir01", fn: "smb-text01.txt", smbshare: "smbshare01" }
   - { name: "distvol02", brick: "/glusterfs/jbrick02", export_id: 102, mount_dir: "/mnt/smb-dir02", fn: "smb-text02.txt", smbshare: "smbshare02" }
   - { name: "distvol03", brick: "/glusterfs/jbrick03", export_id: 103, mount_dir: "/mnt/smb-dir03", fn: "smb-text03.txt", smbshare: "smbshare03" }
+
 

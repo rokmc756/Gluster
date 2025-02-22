@@ -9,32 +9,32 @@
   when: print_debug == true
 
 
-- name: Umount Gluster NFS Directory
+- name: Umount Gluster Samba Directory
   mount:
     path: "{{ item.mount_dir }}"
     state: unmounted
-  register: umount_nfs_dir
+  register: umount_samba_dir
   with_items: "{{ _volumes }}"
-- debug: msg={{ umount_nfs_dir }}
+- debug: msg={{ umount_samba_dir }}
   when: print_debug == true
 # umount -f -l {{ item.mount_dir }}
 
 
-- name: Delete Directory Mounted with Gluster NFS
+- name: Delete Directory Mounted with Gluster Samba
   file:
     path: "{{ item.mount_dir }}"
     state: absent
-  register: delete_nfs_dir
+  register: delete_samba_dir
   with_items: "{{ _volumes }}"
-- debug: msg={{ delete_nfs_dir }}
+- debug: msg={{ delete_samba_dir }}
   when: print_debug == true
 
 
-- name: Uninstall NFS Client Packages
+- name: Uninstall Samba Client Packages
   package: name={{ item }} state=absent
   with_items:
-    - "nfs-utils"
-  register: uninstall_nfs_pkgs
-- debug: msg={{ uninstall_nfs_pkgs }}
+    - "samba-client"
+  register: uninstall_samba_client_pkgs
+- debug: msg={{ uninstall_samba_client_pkgs }}
   when: print_debug == true
 

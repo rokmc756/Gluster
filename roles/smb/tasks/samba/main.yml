@@ -1,0 +1,84 @@
+---
+- name: Enable Samba Mode
+  import_tasks: samba/enable-samba-mode.yml
+  tags: enable, install
+  when: ( mode is defined and mode == true ) and inventory_hostname in groups['control']
+
+
+- name: Enable CTDB Mode
+  import_tasks: samba/enable-ctdb.yml
+  tags: enable, install
+  when: ( ctdb is defined and ctdb == true ) and inventory_hostname in groups['workers']
+
+
+- name: Enable Gluster Samba Volume
+  import_tasks: samba/enable-volumes.yml
+  tags: enable, install
+  when: ( volume is defined and volume == true ) and inventory_hostname in groups['workers']
+
+
+- name: Enable Samba Shares
+  import_tasks: samba/enable-shares.yml
+  tags: enable, install
+  when: ( share is defined and share == true ) and inventory_hostname in groups['workers']
+
+
+- name: Add Samba Users
+  import_tasks: samba/add-users.yml
+  tags: add, install
+  when: ( user is defined and user == true ) and inventory_hostname in groups['workers']
+
+
+- name: Enable Security
+  import_tasks: samba/enable-security.yml
+  tags: enable, install
+  when: ( sec is defined and sec == true ) and inventory_hostname in groups['workers']
+
+
+- name: Start Samba Service
+  import_tasks: samba/start-samba.yml
+  tags: start, enable install
+  when: ( service is defined and service == true ) and inventory_hostname in groups['workers']
+
+
+- name: Stop Samba Service
+  import_tasks: samba/stop-samba.yml
+  tags: stop, disable, uninstall
+  when: ( service is defined and service == true ) and inventory_hostname in groups['workers']
+
+
+- name: Disable Security
+  import_tasks: samba/disable-security.yml
+  tags: disable, uninstall
+  when: ( sec is defined and sec == true ) and inventory_hostname in groups['workers']
+
+
+- name: Delete Samba Users
+  import_tasks: samba/delete-users.yml
+  tags: delete, uninstall
+  when: ( user is defined and user == true ) and inventory_hostname in groups['workers']
+
+
+- name: Disable Samba Shares
+  import_tasks: samba/disable-shares.yml
+  tags: disable, install
+  when: ( share is defined and share == true ) and inventory_hostname in groups['workers']
+
+
+- name: Disable Gluster Samba Volume
+  import_tasks: samba/disable-volumes.yml
+  tags: disable, uninstall
+  when: ( volume is defined and volume == true ) and inventory_hostname in groups['workers']
+
+
+- name: Disable CTDB Mode
+  import_tasks: samba/disable-ctdb.yml
+  tags: disable, uninstall
+  when: ( ctdb is defined and ctdb == true ) and inventory_hostname in groups['workers']
+
+
+- name: Disable Samba Mode
+  import_tasks: samba/disable-samba-mode.yml
+  tags: disable, uninstall
+  when: ( mode is defined and mode == true ) and inventory_hostname in groups['control']
+
