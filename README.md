@@ -24,7 +24,7 @@ Gluster is a scalable, distributed file system that aggregates disk storage reso
 ## Gluster Volume Types
 #### Distributed
 Distributed volumes distribute files across the bricks in the volume. You can use distributed volumes where the requirement is to scale storage and the redundancy is either not important or is provided by other hardware/software layers.
-### Replicated
+#### Replicated
 Replicated volumes replicate files across bricks in the volume. You can use replicated volumes in environments where high-availability and high-reliability are critical.
 #### Distributed Replicated
 Distributed replicated volumes distribute files across replicated bricks in the volume. You can use distributed replicated volumes in environments where the requirement is to scale storage and high-reliability is critical. Distributed replicated volumes also offer improved read performance in most environments.
