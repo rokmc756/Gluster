@@ -82,15 +82,15 @@ co9-node04      ansible_ssh_host=192.168.2.174
 ```
 
 ### Deploy Gluster
-#### 1) Start/Stop Gluster Server
+#### 1) Start Gluster Server
 ```
 $ make gluster r=start s=server
 ```
-#### 2) Probe/Detach Gluster Node
+#### 2) Probe Gluster Node
 ```
 $ make gluster r=probe s=server c=peer
 ```
-#### 3) Create/Delete Gluster Volumes
+#### 3) Create Gluster Volumes
 ```
 $ make gluster r=create s=volume c=distribute
 or
@@ -100,25 +100,25 @@ $ make gluster r=create s=volume c=mixed
 or
 $ make gluster r=create s=volume c=disperse
 ```
-#### 4) Setup/Remove Gluster Client
+#### 4) Setup Gluster Client
 ```
 $ make gluster r=setup s=client c=fs
 ```
 
 ### Destroy Gluster
-#### 1) Setup/Remove Gluster Client
+#### 1) Remove Gluster Client
 ```
 $ make gluster r=remove s=client c=fs
 ```
-#### 2) Create/Delete Gluster Volumes
+#### 2) Delete Gluster Volumes
 ```
 $ make gluster r=delete s=volume
 ```
-#### 3) Probe/Detach Gluster Node
+#### 3) Detach Gluster Node
 ```
 $ make gluster r=detach s=server c=peer
 ```
-#### 4) Start/Stop Gluster Server
+#### 4) Stop Gluster Server
 ```
 $ make gluster r=stop s=server
 ```
