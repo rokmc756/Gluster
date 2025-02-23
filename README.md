@@ -1,10 +1,10 @@
-## What is this Ansible Playbook for Gluster
+### What is this Ansible Playbook for Gluster
 It is Ansible Playbook to deploy Gluster with many services such as GlusterFS/NFS Ganesha/Samba for CentOS 9.x.
 The purpose of this is only for development environment not production.
 
-## What is Gluster?
+### What is Gluster?
 Gluster is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.
-### Advantages
+#### Advantages
 - Scales to several petabytes
 - Handles thousands of clients
 - POSIX compatible
@@ -15,13 +15,13 @@ Gluster is a scalable, distributed file system that aggregates disk storage reso
 - Allows optimization for different workloads
 - Open Source
 
-## Gluster Architecture
-### Scale Up and Out Diagram
+### Gluster Architecture
+#### Scale Up and Out Diagram
 ![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_diagram.png)
-### Internal Flow
+#### Internal Flow
 ![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster-file-system-architecture.png)
 
-## Gluster Volume Types
+### Gluster Volume Types
 #### Distributed
 Distributed volumes distribute files across the bricks in the volume. You can use distributed volumes where the requirement is to scale storage and the redundancy is either not important or is provided by other hardware/software layers.
 #### Replicated
@@ -33,16 +33,16 @@ Dispersed volumes are based on erasure codes, providing space-efficient protecti
 #### Distributed Dispersed
 Distributed dispersed volumes distribute files across dispersed subvolumes. This has the same advantages of distribute replicate volumes, but using disperse to store the data into the bricks.
 
-## Supported Platform and OS
+### Supported Platform and OS
 Virtual Machines\
 Baremetal\
 CentOS Stream 9.x
 
-## Prerequisite for Ansible Host
+### Prerequisite for Ansible Host
 MacOS or Windows Linux Subsysetm or Many kind of Linux Distributions should have ansible as ansible host.\
 Supported OS for ansible target host should be prepared with package repository configured such as yum, dnf and apt
 
-## Prepare Ansible Host to run this Ansible Playbook
+### Prepare Ansible Host to run this Ansible Playbook
 * MacOS
 ```
 $ xcode-select --install
@@ -81,102 +81,164 @@ co9-node03      ansible_ssh_host=192.168.2.173
 co9-node04      ansible_ssh_host=192.168.2.174
 ```
 
-### Setup Gluster Nodes
+### Deploy Gluster
 #### 1) Start/Stop Gluster Server
 ```
 $ make gluster r=start s=server
-
-or
-$ make gluster r=stop s=server
 ```
-
 #### 2) Probe/Detach Gluster Node
 ```
 $ make gluster r=probe s=server c=peer
-
-or
-$ make gluster r=detach s=server c=peer
 ```
-
-
 #### 3) Create/Delete Gluster Volumes
 ```
 $ make gluster r=create s=volume
-
-or
-$ make gluster r=delete s=volume
 ```
-
 #### 4) Setup/Remove Gluster Client
 ```
 $ make gluster r=setup s=client c=fs
+```
 
-or
+### Destroy Gluster
+#### 1) Setup/Remove Gluster Client
+```
 $ make gluster r=remove s=client c=fs
 ```
-
-
-
-#### 3) Setup/Remove NFS Server for oVirt NFS Storage Domain
+#### 2) Create/Delete Gluster Volumes
 ```
-$ make storage r=setup s=nfs c=server
-
-or
-$ make storage r=remove s=nfs c=server
+$ make gluster r=delete s=volume
+```
+#### 3) Probe/Detach Gluster Node
+```
+$ make gluster r=detach s=server c=peer
+```
+#### 4) Start/Stop Gluster Server
+```
+$ make gluster r=stop s=server
 ```
 
-
-### Setup Gluster NFS Server
+### Deploy NFS Ganesha Server
+#### 1) Enable NFS Ganesha Package Repository
 ```
 $ make ganesha r=enable s=repo
+```
+#### 2) Install NFS Ganesha Package
+```
 $ make ganesha r=install s=pkgs
+```
+#### 3) Start NFS Ganesha Server
+```
 $ make ganesha r=start s=server
+```
+#### 4) Setup NFS Ganesha Client
+```
 $ make ganesha r=setup s=client c=nfs
 ```
 
 
-### Remove Gluster NFS Server
+### Destroy NFS Ganesha Server
+#### 1) Remove NFS Ganesha Client
 ```
 $ make ganesha r=remove s=client c=nfs
+```
+#### 2) Stop NFS Ganesha Server
+```
 $ make ganesha r=stop s=server
+```
+#### 3) Uninstall NFS Ganesha Package
+```
 $ make ganesha r=uninstall s=pkgs
+```
+#### 4) Disable NFS Ganesha Package Repository
+```
 $ make ganesha r=disable s=repo
 ```
 
-
-## References
-### Setup Samba on GlusterFS
+### Deploy Samba
+#### 1) Enable Gluster Samaba Package Repository
 ```
 $ make smb r=enable s=repo
+```
+#### 2) Install Gluster Samaba Package
+```
 $ make smb r=install s=pkgs
-
+```
+#### 3) Enable Gluster Samaba Mode
+```
 $ make smb r=enable  s=samba  c=mode
+```
+#### 4) Enable Gluster CTDB
+```
 $ make smb r=enable  s=samba  c=ctdb
+```
+#### 5) Enable Gluster Samaba Volumes
+```
 $ make smb r=enable  s=samba  c=volume
+```
+#### 6) Enable Gluster Samaba Shares
+```
 $ make smb r=enable  s=samba  c=share
+```
+#### 7) Add Gluster Samaba Users
+```
 $ make smb r=add     s=samba  c=user
+```
+#### 8) Enable Firewall adn SELinux
+```
 $ make smb r=enable  s=samba  c=sec
+```
+#### 9) Start Gluster Samaba Server
+```
 $ make smb r=start   s=samba  c=service
-
+```
+#### 10) Setup Gluster Samaba Cluster
+```
 $ make smb r=setup   s=samba  c=client
 ```
 
 ### Remove Samba on GlusterFS
+#### 1) Remove Gluster Samaba Cluster
 ```
 $ make smb r=remove  s=samba  c=client
-
+```
+#### 2) Stop Gluster Samaba Server
+```
 $ make smb r=stop    s=samba c=service
+```
+#### 3) Disable Firewall adn SELinux
+```
 $ make smb r=disable s=samba c=sec
+```
+#### 4) Delete Gluster Samaba Users
+```
 $ make smb r=delete  s=samba c=user
+```
+#### 5) Disable Gluster Samaba Shares
+```
 $ make smb r=disable s=samba c=share
+```
+#### 6) Disable Gluster Samaba Volumes
+```
 $ make smb r=disable s=samba c=volume
+```
+#### 7) Disable Gluster CTDB
+```
 $ make smb r=disable s=samba c=ctdb
+```
+#### 8) Disable Gluster Samaba Mode
+```
 $ make smb r=disable s=samba c=mode
-
+```
+#### 9) Uninstall Gluster Samaba Package
+```
 $ make smb r=uninstall  s=pkgs
+```
+#### 10) Disable Gluster Samaba Package Repository
+```
 $ make smb r=disable    s=repo
 ```
 
+## References
 ## Similar Playbook
 ## TODO
 ## Debugging
