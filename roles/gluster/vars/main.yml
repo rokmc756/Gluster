@@ -4,3 +4,10 @@ _volumes:
   - { name: "distvol02", brick: "/glusterfs/jbrick02", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol02", fn: "fs-text02.txt" }
   - { name: "distvol03", brick: "/glusterfs/jbrick03", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol03", fn: "fs-text03.txt" }
 
+
+_volume_count:
+  replica: 3
+  arbiter: 1
+  disperse: 2
+  redundant: 1
+

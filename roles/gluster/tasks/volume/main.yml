@@ -1,12 +1,12 @@
 ---
 - name: Create GlusterFS Volumes
-  import_tasks: create-volumes.yml
+  import_tasks: volume/create-volumes.yml
   tags: create
   when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
 
 
 - name: Delete GlusterFS Volumes
-  import_tasks: delete-volumes.yml
+  import_tasks: volume/delete-volumes.yml
   tags: delete
   when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
 

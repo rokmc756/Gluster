@@ -1,0 +1,19 @@
+---
+- name: Create Gluster Dispersed Volumes
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: present
+    force: true
+    bricks: "{{ item.brick }}"
+    rebalance: yes
+    disperses: "{{ _volume_count.disperse }}"
+    redundancies: "{{ _volume_count.redundant }}"
+    cluster: "{{ groups['workers'] }}"
+    options:
+      { performance.cache-size: "{{ item.perf_cache_size }}",
+        write-behind: "{{ item.wb }}",
+        quick-read: "{{ item.qr }}"
+      }
+  with_items: "{{ _volumes }}"
+  when: ( disperse is defined and disperse == true )
+

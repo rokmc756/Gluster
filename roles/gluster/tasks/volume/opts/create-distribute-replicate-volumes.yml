@@ -1,0 +1,18 @@
+---
+- name: Create Gluster Distribute/Replicate Volumes
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: present
+    force: true
+    bricks: "{{ item.brick }}"
+    rebalance: yes
+    replica: "{{ _volume_count.replica }}"
+    arbiters: "{{ _volume_count.arbiter }}"
+    cluster: "{{ groups['workers'] }}"
+    options:
+      { performance.cache-size: "{{ item.perf_cache_size }}",
+        write-behind: "{{ item.wb }}",
+        quick-read: "{{ item.qr }}"
+      }
+  with_items: "{{ _volumes }}"
+

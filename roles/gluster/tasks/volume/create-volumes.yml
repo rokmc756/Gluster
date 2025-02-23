@@ -12,21 +12,24 @@
   when: print_debug == true
 
 
-- name: Create Gluster Volumes
-  gluster_volume:
-    name: "{{ item.name }}"
-    state: present
-    force: true
-    bricks: "{{ item.brick }}"
-    rebalance: yes
-    cluster: "{{ groups['workers'] }}"
-    options:
-      { performance.cache-size: "{{ item.perf_cache_size }}",
-        write-behind: "{{ item.wb }}",
-        quick-read: "{{ item.qr }}"
-      }
-  with_items: "{{ _volumes }}"
-# gluster volume create vol_distributed transport tcp co9-node01:/glusterfs/distributed co9-node02:/glusterfs/distributed co9-node03:/glusterfs/distributed force
+- name: Create Gluster Distribute Volumes
+  import_tasks: volume/opts/create-distribute-volumes.yml
+  when: ( distribute is defined and distribute == true )
+
+
+- name: Create Gluster Replicate Volumes
+  import_tasks: volume/opts/create-replicate-volumes.yml
+  when: ( replicate is defined and replicate == true )
+
+
+- name: Create Gluster Distribute/Replicate Volumes
+  import_tasks: volume/opts/create-distribute-replicate-volumes.yml
+  when: ( mixed is defined and mixed == true )
+
+
+- name: Create Gluster Disperse Volumes
+  import_tasks: volume/opts/create-disperse-volumes.yml
+  when: ( disperse is defined and disperse == true )
 
 
 - name: Start Gluster Volume
