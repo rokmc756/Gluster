@@ -92,7 +92,13 @@ $ make gluster r=probe s=server c=peer
 ```
 #### 3) Create/Delete Gluster Volumes
 ```
-$ make gluster r=create s=volume
+$ make gluster r=create s=volume c=distribute
+or
+$ make gluster r=create s=volume c=replicate
+or
+$ make gluster r=create s=volume c=mixed
+or
+$ make gluster r=create s=volume c=disperse
 ```
 #### 4) Setup/Remove Gluster Client
 ```
