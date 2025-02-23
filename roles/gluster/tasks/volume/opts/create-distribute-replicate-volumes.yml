@@ -6,7 +6,7 @@
     force: true
     bricks: "{{ item.brick }}"
     rebalance: yes
-    replica: "{{ _volume_count.replica }}"
+    replicas: "{{ _volume_count.replica }}"
     arbiters: "{{ _volume_count.arbiter }}"
     cluster: "{{ groups['workers'] }}"
     options:

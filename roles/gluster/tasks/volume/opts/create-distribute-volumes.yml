@@ -13,5 +13,4 @@
         quick-read: "{{ item.qr }}"
       }
   with_items: "{{ _volumes }}"
-  when: ( distribute is defined and distribute == true )
 

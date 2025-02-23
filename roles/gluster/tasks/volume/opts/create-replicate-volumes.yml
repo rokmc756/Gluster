@@ -14,5 +14,4 @@
         quick-read: "{{ item.qr }}"
       }
   with_items: "{{ _volumes }}"
-  when: ( replicate is defined and replicate == true )
 

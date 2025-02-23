@@ -1,7 +1,8 @@
 ---
+# path: "{{ item.brick }}"
 - name: Create Directory
   file:
-    path: "{{ item.brick }}"
+    path: "/mnt/{{ item.name }}"
     state: directory
     owner: root
     group: root

@@ -15,5 +15,4 @@
         quick-read: "{{ item.qr }}"
       }
   with_items: "{{ _volumes }}"
-  when: ( disperse is defined and disperse == true )
 
