@@ -7,13 +7,13 @@
     backup: "{{ item.backup }}"
   register: rollback_required_config
   with_items:
-    - { fn: "NFS-Ganesha-4",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
+    - { fn: "NFS-Ganesha-{{ _ganesha.ver }}",           regexp: "enabled=1",  line: "enabled=0",  backup: no }
   # when: ansible_os_family == 'Rocky' and ansible_distribution_major_version|int == 9
 
 
 - name: Disable Gluster NFS Ganesha Repository
   shell: |
-    dnf config-manager --disable "centos-nfs-ganesha-4"
+    dnf config-manager --disable "centos-nfs-ganesha-{{ _ganesha.ver }}"
   register: disable_gluster_repo
 - debug: msg={{ disable_gluster_repo }}
   when: print_debug == true
@@ -25,7 +25,7 @@
     state: absent
   register: uninstall_repo_pkgs
   with_items:
-    - "centos-release-nfs-ganesha4"
+    - "centos-release-nfs-ganesha{{ _ganesha.ver }}"
 
 
 - name: Update Caches for DNF Packages

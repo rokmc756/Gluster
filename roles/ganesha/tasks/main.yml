@@ -23,9 +23,3 @@
   import_tasks: client/main.yml
   when: ( client is defined and client == true )
 
-
-#- name: Setup NTP Service
-#  import_tasks: ext/setup-chrony.yml
-#  tags: setup, install
-#  when: ( ntp is defined and ntp == true )
-

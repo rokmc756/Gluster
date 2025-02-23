@@ -43,69 +43,6 @@ $ brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Libr
 $ yum install ansible
 ```
 
-### Setup DNS with FreeIPA
-#### 1) Configure Varialbes for DNS Zone and Records
-```
----
-_dns:
-  zone:
-    - { name: jtest.pivotal.io, type: forward }
-    - { name: 2.168.192.in-addr.arpa, type: reverse }
-  resource:
-    forward:
-      - {  name: "co9-node01",    i   zone: "okd4.pivotal.io",  type: "-a-rec",  value: "192.168.2.171"  }
-      - {  name: "co9-node02",    i   zone: "okd4.pivotal.io",  type: "-a-rec",  value: "192.168.2.172"  }
-      - {  name: "co9-node03",    i   zone: "okd4.pivotal.io",  type: "-a-rec",  value: "192.168.2.173"  }
-      - {  name: "co9-node04",    i   zone: "okd4.pivotal.io",  type: "-a-rec",  value: "192.168.2.174"  }
-      - {  name: "co9-node05",    i   zone: "okd4.pivotal.io",  type: "-a-rec",  value: "192.168.2.175"  }
-      - {  name: "co9-node06",    i   zone: "okd4.pivotal.io",  type: "-a-rec",  value: "192.168.2.176"  }
-      - {  name: "co9-node07",    i   zone: "okd4.pivotal.io",  type: "-a-rec",  value: "192.168.2.177"  }
-    reverse:
-      - { name: "171",  zone: 2.168.192.in-addr.arpa,  type: "--ptr-rec", value: "co9-node02.pivotal.io."  }
-      - { name: "172",  zone: 2.168.192.in-addr.arpa,  type: "--ptr-rec", value: "co9-node03.pivotal.io."  }
-      - { name: "173",  zone: 2.168.192.in-addr.arpa,  type: "--ptr-rec", value: "co9-node04.pivotal.io."  }
-      - { name: "174",  zone: 2.168.192.in-addr.arpa,  type: "--ptr-rec", value: "co9-node05.pivotal.io."  }
-      - { name: "175",  zone: 2.168.192.in-addr.arpa,  type: "--ptr-rec", value: "co9-node06.pivotal.io."  }
-      - { name: "176",  zone: 2.168.192.in-addr.arpa,  type: "--ptr-rec", value: "co9-node07.pivotal.io."  }
-      - { name: "177",  zone: 2.168.192.in-addr.arpa,  type: "--ptr-rec", value: "co9-node08.pivotal.io."  }
-_selinux:
-  policy:
-    - { name: httpd_can_network_connect, toggle: on }
-    - { name: httpd_gracefull_shutdown, toggle: on }
-    - { name: httpd_can_network_relay, toggle: on }
-  semange:
-    - { name: port , type: http_port, proto: tcp, port: 6443 }
-    - { name: port , type: http_port, proto: tcp, port: 22623 }
-    - { name: port , type: http_port, proto: tcp, port: 1936 }
-
-
-_firewall:
-  service:
-    - { name: dns,    state: enabled }
-    - { name: http,   state: enabled }
-    - { name: https,  state: enabled }
-  port:
-    - { state: enabled, port: 6443, proto: tcp, zone: public }
-    - { state: enabled, port: 1936, proto: tcp, zone: public }
-    - { state: enabled, port: 8080, proto: tcp, zone: public }
-```
-
-#### 2) Add DNS Zones and Records
-```
-$ make okd r=setup s=dns c=zone
-$ make okd r=setup s=dns c=record
-or
-$ make okd r=setup s=dns c=all
-```
-
-#### 3) Remove DNS Zones and Records
-```yaml
-$ make okd r=remove s=dns c=record
-$ make okd r=remove s=dns c=zone
-or
-$ make okd r=remove s=dns c=all
-```
-
 ### Configure Inventory for Gluster
 #### 1) Setup NFS Server
 $ vi ansible-hosts-co9
@@ -196,7 +133,8 @@ $ make ganesha r=disable s=repo
 
 
 ## References
-### Instll SMB
+### Setup Samba on GlusterFS
+```
 $ make smb r=enable s=repo
 $ make smb r=install s=pkgs
 
@@ -209,11 +147,10 @@ $ make smb r=enable  s=samba  c=sec
 $ make smb r=start   s=samba  c=service
 
 $ make smb r=setup   s=samba  c=client
+```
 
-
-or
-
-
+### Remove Samba on GlusterFS
+```
 $ make smb r=remove  s=samba  c=client
 
 $ make smb r=stop    s=samba c=service
@@ -226,7 +163,7 @@ $ make smb r=disable s=samba c=mode
 
 $ make smb r=uninstall  s=pkgs
 $ make smb r=disable    s=repo
-
+```
 
 ## Similar Playbook
 ## TODO

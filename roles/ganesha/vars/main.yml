@@ -1,4 +1,7 @@
 ---
+_ganesha:
+    ver: 4
+
 _volumes:
   - { name: "distvol01", brick: "/glusterfs/jbrick01", export_id: 101, mount_dir: "/mnt/nfs-dir01", fn: "nfs-text01.txt" }
   - { name: "distvol02", brick: "/glusterfs/jbrick02", export_id: 102, mount_dir: "/mnt/nfs-dir02", fn: "nfs-text02.txt" }

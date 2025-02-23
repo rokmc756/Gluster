@@ -5,7 +5,7 @@
 
 
 - name: Set Facts For Network and Packages Informations
-  import_tasks: set-ovirt-facts.yml
+  import_tasks: set-gluster-facts.yml
   tags: install, uninstall, deploy, destory, setup, remove, enable, disable, create, delete, add
 
 
@@ -19,16 +19,9 @@
   when: ( server is defined and server == true )
 
 
-- name: Create GlusterFS Volumes
-  import_tasks: create-volumes.yml
-  tags: create
-  when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
-
-
-- name: Delete GlusterFS Volumes
-  import_tasks: delete-volumes.yml
-  tags: delete
-  when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
+- name: Import Gluster Volumes Playbook
+  import_tasks: volume/main.yml
+  when: ( volume is defined and volume == true )
 
 
 - name: Import Gluster Clients Playbook
@@ -36,9 +29,8 @@
   when: ( client is defined and client == true )
 
 
-#- name: Setup NTP Service
-#  import_tasks: ext/setup-chrony.yml
-#  tags: setup, install
-#  when: ( ntp is defined and ntp == true )
-
+- name: Setup NTP Service
+  import_tasks: ext/setup-chrony.yml
+  tags: setup, install
+  when: ( ntp is defined and ntp == true )
 
