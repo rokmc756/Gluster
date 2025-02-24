@@ -1,9 +1,35 @@
 ---
-- name: Disable Gluster Volumes Quota
-  gluster_volume:
-    name: "{{ item.name }}"
-    state: absent
-    directory: /
-    quota: "{{ item.quota }}"
+- name: Remove Gluster Volumns Quota
+  shell: |
+    gluster volume quota {{ item.name }} remove {{ item.quota_dir }}
+  register: remove_gluster_volumes_quota
+  ignore_errors: true
   with_items: "{{ _volumes }}"
+- debug: msg={{ remove_gluster_volumes_quota }}
+
+
+- name: List Gluster Volumns Quota
+  shell: |
+    gluster volume quota {{ item.name }} list
+  register: list_gluster_volumes_quota
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ list_gluster_volumes_quota }}
+
+
+- name: Disable Gluster Volumns Quota
+  shell: |
+    echo y | gluster volume quota {{ item.name }} disable
+  register: enable_gluster_volumes_quota
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ enable_gluster_volumes_quota }}
+
+
+- name: Display Gluster Volumns Quota Info
+  shell: |
+    gluster volume info
+  register: display_gluster_volumes_quota_info
+  ignore_errors: true
+- debug: msg={{ display_gluster_volumes_quota_info }}
 

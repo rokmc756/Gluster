@@ -1,8 +1,8 @@
 ---
 _volumes:
-  - { name: "distvol01", brick: "/glusterfs/jbrick01,/glusterfs/jbrick02,/glusterfs/jbrick03", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol01", fn: "fs-text01.txt", quota: "1GB" }
-  - { name: "distvol02", brick: "/glusterfs/jbrick11,/glusterfs/jbrick12,/glusterfs/jbrick13", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol02", fn: "fs-text02.txt", quota: "1GB" }
-  - { name: "distvol03", brick: "/glusterfs/jbrick21,/glusterfs/jbrick22,/glusterfs/jbrick23", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol03", fn: "fs-text03.txt", quota: "1GB" }
+  - { name: "distvol01", brick: "/glusterfs/jbrick01,/glusterfs/jbrick02,/glusterfs/jbrick03", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol01", fn: "fs-text01.txt", quota: "1GB", quota_dir: "/", quota_soft_limit: "70" }
+  - { name: "distvol02", brick: "/glusterfs/jbrick11,/glusterfs/jbrick12,/glusterfs/jbrick13", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol02", fn: "fs-text02.txt", quota: "1GB", quota_dir: "/", quota_soft_limit: "70" }
+  - { name: "distvol03", brick: "/glusterfs/jbrick21,/glusterfs/jbrick22,/glusterfs/jbrick23", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol03", fn: "fs-text03.txt", quota: "1GB", quota_dir: "/", quota_soft_limit: "70" }
 
 
 _volume_count:
