@@ -256,15 +256,12 @@ $ make smb r=disable    s=repo
 ```
 
 ## References
-## Similar Playbook
+
 ## TODO
-## Debugging
-## Tracking Issues
-
-
-## Errors
-### Gluster Volume Creation Failure
+### 1) Need to check the following error would not be appeared after adding disks not use / directory
 ```
 [root@co9-node01 ~]# gluster volume create vol_distributed transport tcp co9-node01:/glusterfs/distributed co9-node02:/glusterfs/distributed co9-node03:/glusterfs/distributed
 volume create: vol_distributed: failed: The brick co9-node01:/glusterfs/distributed is being created in the root partition. It is recommended that you don't use the system's root partition for storage backend. Or use 'force' at the end of the command if you want to override this behavior.
 ```
+### 2) Need to check the Quota works correctly for all Volume Modes
+
