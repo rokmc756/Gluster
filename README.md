@@ -23,11 +23,11 @@ Gluster is a scalable, distributed file system that aggregates disk storage reso
 
 ### Gluster Volume Types
 #### [ Distributed ]
-Distributed volumes distribute files across the bricks in the volume. You can use distributed volumes where the requirement is to scale storage and the redundancy is either not important or is provided by other hardware/software layers.
+Distributed volumes distribute files across the bricks in the volume where the requirement is to scale storage and the redundancy is either not important or is provided by other hardware/software layers.
 #### [ Replicated ]
-Replicated volumes replicate files across bricks in the volume. You can use replicated volumes in environments where high-availability and high-reliability are critical.
+Replicated volumes replicate files across bricks in the volume where environments that high-availability and high-reliability are critical.
 #### [ Distributed Replicated ]
-Distributed replicated volumes distribute files across replicated bricks in the volume. You can use distributed replicated volumes in environments where the requirement is to scale storage and high-reliability is critical. Distributed replicated volumes also offer improved read performance in most environments.
+Distributed replicated volumes distribute files across replicated bricks in the volume where environments that the requirement is to scale storage and high-reliability is critical. Distributed replicated volumes also offer improved read performance in most environments.
 #### [ Dispersed ]
 Dispersed volumes are based on erasure codes, providing space-efficient protection against disk or server failures. It stores an encoded fragment of the original file to each brick in a way that only a subset of the fragments is needed to recover the original file. The number of bricks that can be missing without losing access to data is configured by the administrator on volume creation time.
 #### [ Distributed Dispersed ]
@@ -36,7 +36,7 @@ Distributed dispersed volumes distribute files across dispersed subvolumes. This
 ### Supported Platform and OS
 Virtual Machines\
 Baremetal\
-CentOS Stream 9.x
+Rocky Linux / CentOS Stream 9.x
 
 ### Prerequisite for Ansible Host
 MacOS or Windows Linux Subsysetm or Many kind of Linux Distributions should have ansible as ansible host.\
@@ -56,7 +56,6 @@ $ yum install ansible
 ```
 
 ### [ Configure Inventory for Gluster ]
-#### 1) Setup NFS Server
 $ vi ansible-hosts-co9
 ```
 [all:vars]
@@ -79,6 +78,10 @@ co9-node03      ansible_ssh_host=192.168.2.173
 
 [clients]
 co9-node04      ansible_ssh_host=192.168.2.174
+```
+### Initialize Linux Hosts to create users and ssh keys to exchange them among all hosts
+```
+$ make hosts r=init s=all
 ```
 
 ### [ Deploy Gluster ]
