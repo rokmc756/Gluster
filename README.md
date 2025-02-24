@@ -100,7 +100,11 @@ $ make gluster r=create s=volume c=mixed
 or
 $ make gluster r=create s=volume c=disperse
 ```
-#### 4) Setup Gluster Client
+#### 4) Enable Gluster Volumes Quata
+```
+$ make gluster r=enable s=volume c=quota
+```
+#### 5) Setup Gluster Client
 ```
 $ make gluster r=setup s=client c=fs
 ```
@@ -110,15 +114,19 @@ $ make gluster r=setup s=client c=fs
 ```
 $ make gluster r=remove s=client c=fs
 ```
-#### 2) Delete Gluster Volumes
+#### 2) Disable Gluster Volumes Quota
+```
+$ make gluster r=disable s=volume c=quota
+```
+#### 3) Delete Gluster Volumes
 ```
 $ make gluster r=delete s=volume
 ```
-#### 3) Detach Gluster Node
+#### 4) Detach Gluster Node
 ```
 $ make gluster r=detach s=server c=peer
 ```
-#### 4) Stop Gluster Server
+#### 5) Stop Gluster Server
 ```
 $ make gluster r=stop s=server
 ```

@@ -1,0 +1,9 @@
+---
+- name: Disable Gluster Volumes Quota
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: absent
+    directory: /
+    quota: "{{ item.quota }}"
+  with_items: "{{ _volumes }}"
+

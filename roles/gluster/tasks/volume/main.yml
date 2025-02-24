@@ -11,8 +11,14 @@
   when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
 
 
-- name: Delete GlusterFS Volumes Quota
+- name: Enable GlusterFS Volumes Quota
   import_tasks: volume/enable-quota.yml
   tags: enable
+  when: ( quota is defined and quota == true ) and inventory_hostname in groups['control']
+
+
+- name: Disable GlusterFS Volumes Quota
+  import_tasks: volume/disable-quota.yml
+  tags: disable
   when: ( quota is defined and quota == true ) and inventory_hostname in groups['control']
 
