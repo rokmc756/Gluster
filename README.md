@@ -4,7 +4,7 @@ The purpose of this is only for development environment not production.
 
 ### What is Gluster?
 Gluster is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.
-#### Advantages
+#### [ Advantages ]
 - Scales to several petabytes
 - Handles thousands of clients
 - POSIX compatible
@@ -16,21 +16,21 @@ Gluster is a scalable, distributed file system that aggregates disk storage reso
 - Open Source
 
 ### Gluster Architecture
-#### Scale Up and Out Diagram
+#### [ Scale Up and Out Diagram ]
 ![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_diagram.png)
 #### Internal Flow
 ![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster-file-system-architecture.png)
 
 ### Gluster Volume Types
-#### Distributed
+#### [ Distributed ]
 Distributed volumes distribute files across the bricks in the volume. You can use distributed volumes where the requirement is to scale storage and the redundancy is either not important or is provided by other hardware/software layers.
-#### Replicated
+#### [ Replicated ]
 Replicated volumes replicate files across bricks in the volume. You can use replicated volumes in environments where high-availability and high-reliability are critical.
-#### Distributed Replicated
+#### [ Distributed Replicated ]
 Distributed replicated volumes distribute files across replicated bricks in the volume. You can use distributed replicated volumes in environments where the requirement is to scale storage and high-reliability is critical. Distributed replicated volumes also offer improved read performance in most environments.
-#### Dispersed
+#### [ Dispersed ]
 Dispersed volumes are based on erasure codes, providing space-efficient protection against disk or server failures. It stores an encoded fragment of the original file to each brick in a way that only a subset of the fragments is needed to recover the original file. The number of bricks that can be missing without losing access to data is configured by the administrator on volume creation time.
-#### Distributed Dispersed
+#### [ Distributed Dispersed ]
 Distributed dispersed volumes distribute files across dispersed subvolumes. This has the same advantages of distribute replicate volumes, but using disperse to store the data into the bricks.
 
 ### Supported Platform and OS
@@ -55,7 +55,7 @@ $ brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Libr
 $ yum install ansible
 ```
 
-### Configure Inventory for Gluster
+### [ Configure Inventory for Gluster ]
 #### 1) Setup NFS Server
 $ vi ansible-hosts-co9
 ```
@@ -81,7 +81,7 @@ co9-node03      ansible_ssh_host=192.168.2.173
 co9-node04      ansible_ssh_host=192.168.2.174
 ```
 
-### Deploy Gluster
+### [ Deploy Gluster ]
 #### 1) Start Gluster Server
 ```
 $ make gluster r=start s=server
@@ -105,7 +105,7 @@ $ make gluster r=create s=volume c=disperse
 $ make gluster r=setup s=client c=fs
 ```
 
-### Destroy Gluster
+### [ Destroy Gluster ]
 #### 1) Remove Gluster Client
 ```
 $ make gluster r=remove s=client c=fs
@@ -123,7 +123,7 @@ $ make gluster r=detach s=server c=peer
 $ make gluster r=stop s=server
 ```
 
-### Deploy NFS Ganesha Server
+### [ Deploy NFS Ganesha Server ]
 #### 1) Enable NFS Ganesha Package Repository
 ```
 $ make ganesha r=enable s=repo
@@ -142,7 +142,7 @@ $ make ganesha r=setup s=client c=nfs
 ```
 
 
-### Destroy NFS Ganesha Server
+### [ Destroy NFS Ganesha Server ]
 #### 1) Remove NFS Ganesha Client
 ```
 $ make ganesha r=remove s=client c=nfs
@@ -160,7 +160,7 @@ $ make ganesha r=uninstall s=pkgs
 $ make ganesha r=disable s=repo
 ```
 
-### Deploy Samba
+### [ Deploy Samba ]
 #### 1) Enable Gluster Samaba Package Repository
 ```
 $ make smb r=enable s=repo
@@ -202,7 +202,7 @@ $ make smb r=start   s=samba  c=service
 $ make smb r=setup   s=samba  c=client
 ```
 
-### Remove Samba on GlusterFS
+### [ Remove Samba on GlusterFS ]
 #### 1) Remove Gluster Samaba Cluster
 ```
 $ make smb r=remove  s=samba  c=client

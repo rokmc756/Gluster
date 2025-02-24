@@ -1,0 +1,9 @@
+---
+- name: Enable Create Gluster Volumes Quota
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: present
+    directory: /
+    quota: "{{ item.quota }}"
+  with_items: "{{ _volumes }}"
+
