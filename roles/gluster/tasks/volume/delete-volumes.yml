@@ -42,14 +42,3 @@
   with_items: "{{ _volumes }}"
 - debug: msg={{ confirm_volume_status }}
 
-
-#  path: "{{ item.brick }}"
-- name: Delete Directory
-  file:
-    path: "/mnt/{{ item.name }}"
-    state: absent
-  register: delete_dir
-  with_items: "{{ _volumes }}"
-- debug: msg={{ delete_dir }}
-  when: print_debug == true
-

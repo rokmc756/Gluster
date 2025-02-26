@@ -1,16 +1,16 @@
 ---
 # path: "{{ item.brick }}"
-- name: Create Directory
-  file:
-    path: "/mnt/{{ item.name }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-  register: create_dir
-  with_items: "{{ _volumes }}"
-- debug: msg={{ create_dir }}
-  when: print_debug == true
+#- name: Create Directory
+#  file:
+#    path: "/mnt/{{ item.name }}"
+#    state: directory
+#    owner: root
+#    group: root
+#    mode: 0755
+#  register: create_dir
+#  with_items: "{{ _volumes }}"
+#- debug: msg={{ create_dir }}
+#  when: print_debug == true
 
 
 - name: Create Gluster Distribute Volumes

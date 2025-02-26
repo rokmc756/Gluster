@@ -1,0 +1,60 @@
+---
+- name: Install Parted
+  package:
+    name: "{{ item }}"
+    state: present
+  register: install_parted
+  with_items:
+    - lvm2
+    - parted
+- debug: msg={{ install_parted }}
+
+
+- import_tasks: volume/cleanup-devices.yml
+
+
+- name: "Add New Partition"
+  parted:
+    device: "{{ item.dev }}"
+    number: 1
+    state: present
+    part_end: 100%
+    # flags: [lvm]
+  register: add_partition
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ add_partition }}
+
+
+- name: Format the Partition
+  filesystem:
+    dev: "{{ item.dev }}1"
+    fstype: xfs
+    state: present
+  register: format_partition
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ format_partition }}
+
+
+- name: Creates Directory
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: yes
+  register: create_directory
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ create_directory }}
+
+
+- name: Mount the Partition
+  mount:
+    fstype: xfs
+    src: "{{ item.dev }}1"
+    path: "{{ item.dir }}"
+    state: mounted
+  register: mount_partition
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ mount_partition }}
+

@@ -8,5 +8,6 @@
     - "samba"
     - "ctdb"
     - "samba-vfs-glusterfs"
+    - "samba-*"
 - debug: msg={{ uninstall_pkgs }}
 

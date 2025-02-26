@@ -1,5 +1,5 @@
 ---
-- name: Install Package
+- name: Install Packages
   package:
     name: glusterfs-server
     state: present

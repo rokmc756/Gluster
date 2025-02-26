@@ -10,22 +10,16 @@ _gluster:
   build_version: ""
   release_date: ""
   repo_url: ""
-  download_url: "https://github.com/okd-project/okd/releases/download"
+  download_url: ""
   download: false
   base_path: /root
   host_num: "{{ groups['all'] | length }}"
   local_home_dir: "/home/jomoon"
   dns: "192.168.2.199 8.8.8.8 168.126.63.1"
   download_client: false
-  data_path: "/var/lib/postgresql/data"
-  pgsql:
-    db_name:
-      - "ovirt_engine_history"
-      - "ovirt_engine_keycloak"
-      - "engine"
-      - "ovirt_engine_history_grafana"
-    db_user: ovirt_user
-    db_password: changeme
+  volumes:
+    - { dev: "/dev/vdb", dir: "/glusterfs/jbrick01", vg: "jvg01", lv: "jlv01" }
+    - { dev: "/dev/vdc", dir: "/glusterfs/jbrick02", vg: "jvg02", lv: "jlv02" }
   net:
     type: "virtual"                           # Or Physical
     gateway: "192.168.2.1"

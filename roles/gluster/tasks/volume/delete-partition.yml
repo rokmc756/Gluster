@@ -1,0 +1,53 @@
+---
+- name: Unmount the Partition
+  mount:
+    path: "{{ item.dir }}"
+    state: "unmounted"
+  register: unmount_partition
+  ignore_errors: true
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ unmount_partition }}
+
+
+- name: Delete the Partition and Remove Entry in /etc/fstab
+  mount:
+    path: "{{ item.dir }}"
+    state: "absent"
+  register: remove_fstab_entry
+  ignore_errors: true
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ remove_fstab_entry }}
+
+
+- name: Delete Directory
+  file:
+    path: "{{ item.dir }}"
+    state: absent
+  register: delete_directory
+  ignore_errors: true
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ delete_directory }}
+
+
+- name: Remove Disk Partition
+  parted:
+    device: "{{ item.dev }}"
+    number: "1"
+    state: absent
+  register: delete_partition
+  ignore_errors: true
+  with_items: "{{ _gluster.volumes }}"
+- debug: msg={{ delete_partition }}
+
+
+- import_tasks: volume/cleanup-devices.yml
+
+
+- name: Uninstall Parted
+  package:
+    name: parted
+    state: absent
+  register: uninstall_parted
+  ignore_errors: true
+- debug: msg={{ uninstall_parted }}
+

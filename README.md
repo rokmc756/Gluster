@@ -84,6 +84,13 @@ co9-node04      ansible_ssh_host=192.168.2.174
 $ make hosts r=init s=all
 ```
 
+### Enable Gluster Package Repositories and Install Packages
+```
+$ make gluster r=enable s=repo
+
+$ make gluster r=install s=pkgs
+```
+
 ### [ Deploy Gluster ]
 #### 1) Start Gluster Server
 ```
@@ -93,7 +100,12 @@ $ make gluster r=start s=server
 ```
 $ make gluster r=probe s=server c=peer
 ```
-#### 3) Create Gluster Volumes
+
+#### 3) Create Partition and Filesystem
+```
+$ make gluster r=create s=volume c=partition
+```
+#### 4) Create Gluster Volumes
 ```
 $ make gluster r=create s=volume c=distribute
 or
@@ -103,11 +115,11 @@ $ make gluster r=create s=volume c=mixed
 or
 $ make gluster r=create s=volume c=disperse
 ```
-#### 4) Enable Gluster Volumes Quata
+#### 5) Enable Gluster Volumes Quata
 ```
 $ make gluster r=enable s=volume c=quota
 ```
-#### 5) Setup Gluster Client
+#### 6) Setup Gluster Client
 ```
 $ make gluster r=setup s=client c=fs
 ```

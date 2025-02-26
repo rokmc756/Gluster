@@ -1,14 +1,38 @@
 ---
-- name: Create GlusterFS Volumes
-  import_tasks: volume/create-volumes.yml
+- name: Create Partitions
+  import_tasks: volume/create-partition.yml
   tags: create
-  when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
+  when: ( partition is defined and partition == true ) and inventory_hostname in groups['workers']
 
 
-- name: Delete GlusterFS Volumes
-  import_tasks: volume/delete-volumes.yml
-  tags: delete
-  when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
+#- name: Create GlusterFS Volumes
+#  import_tasks: volume/create-volumes.yml
+#  tags: create
+#  when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
+
+
+- name: Create Gluster Distribute Volumes
+  import_tasks: volume/opts/create-distribute-volumes.yml
+  tags: create
+  when: ( distribute is defined and distribute == true ) and inventory_hostname in groups['control']
+
+
+- name: Create Gluster Replicate Volumes
+  import_tasks: volume/opts/create-replicate-volumes.yml
+  tags: create
+  when: ( replicate is defined and replicate == true ) and inventory_hostname in groups['control']
+
+
+- name: Create Gluster Distribute/Replicate Volumes
+  import_tasks: volume/opts/create-distribute-replicate-volumes.yml
+  tags: create
+  when: ( mixed is defined and mixed == true ) and inventory_hostname in groups['control']
+
+
+- name: Create Gluster Disperse Volumes
+  import_tasks: volume/opts/create-disperse-volumes.yml
+  tags: create
+  when: ( disperse is defined and disperse == true ) and inventory_hostname in groups['control']
 
 
 - name: Enable GlusterFS Volumes Quota
@@ -17,8 +41,20 @@
   when: ( quota is defined and quota == true ) and inventory_hostname in groups['control']
 
 
+- name: Delete GlusterFS Volumes
+  import_tasks: volume/delete-volumes.yml
+  tags: delete
+  when: ( fs is defined and fs == true ) and inventory_hostname in groups['control']
+
+
 - name: Disable GlusterFS Volumes Quota
   import_tasks: volume/disable-quota.yml
   tags: disable
   when: ( quota is defined and quota == true ) and inventory_hostname in groups['control']
+
+
+- name: Delete Partitions
+  import_tasks: volume/delete-partition.yml
+  tags: delete
+  when: ( partition is defined and partition == true ) and inventory_hostname in groups['workers']
 
