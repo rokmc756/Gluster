@@ -13,7 +13,7 @@
 - import_tasks: volume/cleanup-devices.yml
 
 
-- name: "Add New Partition"
+- name: Add New Partition
   parted:
     device: "{{ item.dev }}"
     number: 1

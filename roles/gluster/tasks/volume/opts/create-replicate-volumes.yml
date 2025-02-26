@@ -3,7 +3,6 @@
   gluster_volume:
     name: "{{ item.name }}"
     state: present
-    force: true
     bricks: "{{ item.brick }}"
     rebalance: yes
     replicas: "{{ _volume_count.replica }}"
@@ -30,3 +29,4 @@
     gluster volume info
   register: confirm_volume_info
 - debug: msg={{ confirm_volume_info }}
+

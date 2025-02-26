@@ -18,8 +18,9 @@ _gluster:
   dns: "192.168.2.199 8.8.8.8 168.126.63.1"
   download_client: false
   volumes:
-    - { dev: "/dev/vdb", dir: "/glusterfs/jbrick01", vg: "jvg01", lv: "jlv01" }
-    - { dev: "/dev/vdc", dir: "/glusterfs/jbrick02", vg: "jvg02", lv: "jlv02" }
+    - { dev: "/dev/vdb", dir: "/glusterfs01", vg: "jvg01", lv: "jlv01" }
+    - { dev: "/dev/vdc", dir: "/glusterfs02", vg: "jvg02", lv: "jlv02" }
+    - { dev: "/dev/vdd", dir: "/glusterfs03", vg: "jvg03", lv: "jlv03" }
   net:
     type: "virtual"                           # Or Physical
     gateway: "192.168.2.1"

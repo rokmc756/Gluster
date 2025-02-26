@@ -8,15 +8,6 @@
 - debug: msg={{ remove_gluster_volumes_quota }}
 
 
-- name: List Gluster Volumns Quota
-  shell: |
-    gluster volume quota {{ item.name }} list
-  register: list_gluster_volumes_quota
-  ignore_errors: true
-  with_items: "{{ _volumes }}"
-- debug: msg={{ list_gluster_volumes_quota }}
-
-
 - name: Disable Gluster Volumns Quota
   shell: |
     echo y | gluster volume quota {{ item.name }} disable
@@ -32,4 +23,14 @@
   register: display_gluster_volumes_quota_info
   ignore_errors: true
 - debug: msg={{ display_gluster_volumes_quota_info }}
+
+
+#- name: List Gluster Volumns Quota
+#  shell: |
+#    gluster volume quota {{ item.name }} list
+#  register: list_gluster_volumes_quota
+#  ignore_errors: true
+#  with_items: "{{ _volumes }}"
+#- debug: msg={{ list_gluster_volumes_quota }}
+
 

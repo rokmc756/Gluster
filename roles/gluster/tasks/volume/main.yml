@@ -5,12 +5,6 @@
   when: ( partition is defined and partition == true ) and inventory_hostname in groups['workers']
 
 
-#- name: Create GlusterFS Volumes
-#  import_tasks: volume/create-volumes.yml
-#  tags: create
-#  when: ( volume is defined and volume == true ) and inventory_hostname in groups['control']
-
-
 - name: Create Gluster Distribute Volumes
   import_tasks: volume/opts/create-distribute-volumes.yml
   tags: create
