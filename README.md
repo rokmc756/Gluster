@@ -135,13 +135,17 @@ $ make gluster r=disable s=volume c=quota
 ```
 #### 3) Delete Gluster Volumes
 ```
-$ make gluster r=delete s=volume
+$ make gluster r=delete s=volume c=fs
 ```
-#### 4) Detach Gluster Node
+#### 4) Delete Partition and Filesystem
+```
+$ make gluster r=delete s=volume c=partition
+```
+#### 5) Detach Gluster Node
 ```
 $ make gluster r=detach s=server c=peer
 ```
-#### 5) Stop Gluster Server
+#### 6) Stop Gluster Server
 ```
 $ make gluster r=stop s=server
 ```
