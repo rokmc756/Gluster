@@ -1,8 +1,16 @@
 ---
 _volumes:
   - { name: "distvol01", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick01,/glusterfs02/jbrick02,/glusterfs03/jbrick03", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol01", fn: "fs-text01.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
-  - { name: "distvol02", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick04,/glusterfs02/jbrick05,/glusterfs03/jbrick06", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol02", fn: "fs-text02.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
-  - { name: "distvol03", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick07,/glusterfs02/jbrick08,/glusterfs03/jbrick09", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol03", fn: "fs-text03.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
+
+
+  # - { name: "distvol01", host: "co9-node01", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick01", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol01", fn: "fs-text01.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
+  # - { name: "distvol01", host: "co9-node02", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick02", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol02", fn: "fs-text02.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
+  # - { name: "distvol01", host: "co9-node03", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick03", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol03", fn: "fs-text03.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
+
+  # - { name: "distvol01", host: "co9-node01", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick01,/glusterfs02/jbrick02,/glusterfs03/jbrick03", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol01", fn: "fs-text01.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
+  # - { name: "distvol02", host: "co9-node02", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick04,/glusterfs02/jbrick05,/glusterfs03/jbrick06", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol02", fn: "fs-text02.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
+  # - { name: "distvol03", host: "co9-node03", devices: "/dev/vdb,/dev/vdc,/dev/vdd", brick: "/glusterfs01/jbrick07,/glusterfs02/jbrick08,/glusterfs03/jbrick09", perf_cache_size: "128MB", wb: "off", qr: "on", mount_dir: "/mnt/distvol03", fn: "fs-text03.txt", quota: "80GB", quota_dir: "/", quota_soft_limit: "70" }
+
 
 
 _volume_count:
@@ -10,4 +18,5 @@ _volume_count:
   arbiter: 1
   disperse: 3
   redundant: 1
+
 

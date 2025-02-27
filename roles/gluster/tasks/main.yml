@@ -29,8 +29,15 @@
   when: ( client is defined and client == true )
 
 
+- name: Enable SELinux
+  import_tasks: ext/enable-selinux.yml
+  tags: enable, install
+  when: ( selinux is defined and selinux == true ) and inventory_hostname in groups['workers']
+
+
 - name: Setup NTP Service
   import_tasks: ext/setup-chrony.yml
   tags: setup, install
   when: ( ntp is defined and ntp == true )
+
 

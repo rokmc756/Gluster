@@ -7,6 +7,7 @@
     rebalance: yes
     replicas: "{{ _volume_count.replica }}"
     cluster: "{{ groups['workers'] }}"
+    force: yes
     options:
       { performance.cache-size: "{{ item.perf_cache_size }}",
         write-behind: "{{ item.wb }}",

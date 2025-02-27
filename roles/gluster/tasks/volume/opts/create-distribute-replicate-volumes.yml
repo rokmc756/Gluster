@@ -8,6 +8,7 @@
     replicas: "{{ _volume_count.replica }}"
     arbiters: "{{ _volume_count.arbiter }}"
     cluster: "{{ groups['workers'] }}"
+    force: yes
     options:
       { performance.cache-size: "{{ item.perf_cache_size }}",
         write-behind: "{{ item.wb }}",

@@ -282,4 +282,3 @@ volume create: vol_distributed: failed: The brick co9-node01:/glusterfs/distribu
 ## References
 * https://www.server-world.info/en/note?os=CentOS_Stream_9&p=glusterfs11&f=1
 
-

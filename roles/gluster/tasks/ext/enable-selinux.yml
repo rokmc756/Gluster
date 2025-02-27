@@ -1,18 +1,31 @@
 ---
-- name: Change SELinux Policy If It is Enabled
+
+# https://docs.redhat.com/ko/documentation/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-managing_confined_services-glusterfs-configuration_examples#sect-Managing_Confined_Services-glusterFS-Configuration_Examples-Labeling_Gluster_Bricks
+
+- name: Change SELinux Type
   shell: |
-    setsebool -P {{ item.name }} {{ item.toggle }}
-  register: change_selinux_policy
-  with_items: "{{ _selinux.policy }}"
-- debug: msg={{ change_selinux_policy }}
+     for i in `echo {{ item.brick }} | sed -e 's/,/ /g'`
+     do
+       semanage fcontext -a -t glusterd_brick_t '$i(/.*)?'
+     done
+  register: change_selinux_type
+  with_items: "{{ _volumes }}"
+- debug: msg={{ change_selinux_type }}
   when: print_debug == true
 
 
-- name: Add SELinux Port Policy
+- name: Apply SELinux Type
   shell: |
-    semanage {{ item.name }} -a -t {{ item.type }} -p {{ item.proto }} {{ item.port }}
-  register: add_selinux_port_policy
-  with_items: "{{ _selinux.semanage }}"
-- debug: msg={{ add_selinux_port_policy }}
+     for j in `echo {{ item.brick }} | sed -e 's/,/ /g'`
+     do
+       restorecon -Rv $j
+     done
+  register: apply_selinux_type
+  with_items: "{{ _volumes }}"
+- debug: msg={{ apply_selinux_type }}
   when: print_debug == true
+
+
+# Check SELinux Context
+# ls -lZd /mnt/brick1/
 

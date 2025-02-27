@@ -8,6 +8,7 @@
     disperses: "{{ _volume_count.disperse }}"
     redundancies: "{{ _volume_count.redundant }}"
     cluster: "{{ groups['workers'] }}"
+    force: yes
     options:
       { performance.cache-size: "{{ item.perf_cache_size }}",
         write-behind: "{{ item.wb }}",
