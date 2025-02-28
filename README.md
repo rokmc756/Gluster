@@ -278,6 +278,13 @@ $ make smb r=disable    s=repo
 volume create: vol_distributed: failed: The brick co9-node01:/glusterfs/distributed is being created in the root partition. It is recommended that you don't use the system's root partition for storage backend. Or use 'force' at the end of the command if you want to override this behavior.
 ```
 ### 2) Need to check the Quota works correctly for all Volume Modes
+```
+```
+
+### 3)
+- https://github.com/gluster/glusterfs/issues/2347
+```
+```
 
 ## References
 * https://www.server-world.info/en/note?os=CentOS_Stream_9&p=glusterfs11&f=1

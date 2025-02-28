@@ -20,3 +20,15 @@ Brick co9-node02:/glusterfs01/jbrick02      59157     0          Y       203532
 Brick co9-node03:/glusterfs01/jbrick02      59776     0          Y       200900
 ```
 
+```
+$ gluster volume heal distvol01
+Launching heal operation to perform index self heal on volume distvol01 has been unsuccessful:
+Self-heal-daemon is disabled. Heal will not be triggered on volume distvol01
+```
+
+
+```
+$ gluster volume bitrot distvol01 scrub status
+Bitrot command failed : Bitrot is not enabled on volume distvol01
+```
+
