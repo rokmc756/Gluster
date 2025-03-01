@@ -123,29 +123,38 @@ $ make gluster r=enable s=volume c=quota
 ```
 $ make gluster r=setup s=client c=fs
 ```
+#### 7) Enable Gluster Client Quota
+```
+$ make gluster r=enable s=volume c=cquota
+```
+
 
 ### [ Destroy Gluster ]
-#### 1) Remove Gluster Client
+#### 1) Disable Gluster Client Quota
+```
+$ make gluster r=disable s=volume c=cquota
+```
+#### 2) Remove Gluster Client
 ```
 $ make gluster r=remove s=client c=fs
 ```
-#### 2) Disable Gluster Volumes Quota
+#### 3) Disable Gluster Volumes Quota
 ```
 $ make gluster r=disable s=volume c=quota
 ```
-#### 3) Delete Gluster Volumes
+#### 4) Delete Gluster Volumes
 ```
 $ make gluster r=delete s=volume c=fs
 ```
-#### 4) Delete Partition and Filesystem
+#### 5) Delete Partition and Filesystem
 ```
 $ make gluster r=delete s=volume c=partition
 ```
-#### 5) Detach Gluster Node
+#### 6) Detach Gluster Node
 ```
 $ make gluster r=detach s=server c=peer
 ```
-#### 6) Stop Gluster Server
+#### 7) Stop Gluster Server
 ```
 $ make gluster r=stop s=server
 ```
