@@ -1,0 +1,26 @@
+---
+# If you'd like to see whole disk size even on a client, not display quota size,
+- name: Turn off "quota-deem-statfs" parameter on a GlusterFS Volume Node
+  shell: |
+    gluster volume set {{ item.name }} quota-deem-statfs off
+  register: turn_off_deem_statfs_param
+  with_items: "{{ _volumes }}"
+- debug: msg={{ turn_off_deem_statfs_param }}
+
+
+- name: Set Gluster Volumns Quota Soft Limits
+  shell: |
+    gluster volume quota {{ item.name }} limit-usage /{{ item.quota_dir }} {{ item.dir_quota }} {{ item.quota_soft_limit }}
+  register: set_gluster_volumes_quota_soft_limit
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ set_gluster_volumes_quota_soft_limit }}
+
+
+#- name: List Gluster Volumns Quota
+#  shell: |
+#    gluster volume quota {{ item.name }} list
+#  register: list_gluster_volumes_quota
+#  with_items: "{{ _volumes }}"
+#- debug: msg={{ list_gluster_volumes_quota }}
+

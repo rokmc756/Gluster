@@ -1,0 +1,20 @@
+---
+#- name: List Gluster Volumns Quota
+#  shell: |
+#    gluster volume quota {{ item.name }} list
+#  register: list_gluster_volumes_quota
+#  ignore_errors: true
+#  with_items: "{{ _volumes }}"
+#- debug: msg={{ list_gluster_volumes_quota }}
+#  ignore_errors: true
+
+
+- name: Remove Gluster Volumns Quota for Client Directory
+  shell: |
+    gluster volume quota {{ item.name }} remove /{{ item.quota_dir }}
+  register: remove_gluster_volumes_client_quota
+  ignore_errors: true
+  with_items: "{{ _volumes }}"
+- debug: msg={{ remove_gluster_volumes_client_quota }}
+  ignore_errors: true
+

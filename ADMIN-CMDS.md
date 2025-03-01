@@ -32,3 +32,13 @@ $ gluster volume bitrot distvol01 scrub status
 Bitrot command failed : Bitrot is not enabled on volume distvol01
 ```
 
+```
+./conn-gluster.sh 171 "sysctl kernel.io_uring_disabled=0"
+```
+
+
+```
+gluster volume set distvol01 storage.owner-uid 36
+gluster volume set distvol01 storage.owner-gid 36
+```
+

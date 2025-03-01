@@ -17,9 +17,9 @@
     group: root
     mode: 0777
     recurse: yes
-  register: create_nfs_dir
+  register: create_dir
   with_items: "{{ _volumes }}"
-- debug: msg={{ create_nfs_dir }}
+- debug: msg={{ create_dir }}
   when: print_debug == true
 
 
@@ -48,5 +48,19 @@
   with_items: "{{ _volumes }}"
   register: create_file
 - debug: msg={{ create_file }}
+  when: print_debug == true
+
+
+- name: Create Directory for Quota
+  file:
+    path: "{{ item.mount_dir }}/{{ item.quota_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+    recurse: yes
+  register: create_quota_dir
+  with_items: "{{ _volumes }}"
+- debug: msg={{ create_quota_dir }}
   when: print_debug == true
 

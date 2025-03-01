@@ -35,6 +35,12 @@
   when: ( quota is defined and quota == true ) and inventory_hostname in groups['control']
 
 
+- name: Enable GlusterFS Volumes Client Quota
+  import_tasks: volume/enable-client-quota.yml
+  tags: enable
+  when: ( cquota is defined and cquota == true ) and inventory_hostname in groups['control']
+
+
 - name: Delete GlusterFS Volumes
   import_tasks: volume/delete-volumes.yml
   tags: delete
@@ -45,6 +51,12 @@
   import_tasks: volume/disable-quota.yml
   tags: disable
   when: ( quota is defined and quota == true ) and inventory_hostname in groups['control']
+
+
+- name: Disable GlusterFS Volumes Client Quota
+  import_tasks: volume/disable-client-quota.yml
+  tags: disable
+  when: ( cquota is defined and cquota == true ) and inventory_hostname in groups['control']
 
 
 - name: Delete Partitions

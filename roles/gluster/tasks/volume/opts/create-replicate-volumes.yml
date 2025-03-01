@@ -11,7 +11,9 @@
     options:
       { performance.cache-size: "{{ item.perf_cache_size }}",
         write-behind: "{{ item.wb }}",
-        quick-read: "{{ item.qr }}"
+        quick-read: "{{ item.qr }}",
+        storage.owner-uid: "{{ item.uid }}",
+        storage.owner-gid: "{{ item.gid }}"
       }
   with_items: "{{ _volumes }}"
 
