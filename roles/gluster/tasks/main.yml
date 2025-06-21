@@ -29,6 +29,18 @@
   when: ( client is defined and client == true )
 
 
+- name: Install Gluster Web Interface
+  import_tasks: install-gluster-web.yml
+  tags: install, enable
+  when: ( web is defined and web == true ) and inventory_hostname in groups['web']
+
+
+- name: Uninstall Gluster Web Interface
+  import_tasks: uninstall-gluster-web.yml
+  tags: uninstall, disable
+  when: ( web is defined and web == true ) and inventory_hostname in groups['web']
+
+
 - name: Enable SELinux
   import_tasks: ext/enable-selinux.yml
   tags: enable, install
@@ -39,5 +51,4 @@
   import_tasks: ext/setup-chrony.yml
   tags: setup, install
   when: ( ntp is defined and ntp == true )
-
 

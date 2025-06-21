@@ -1,0 +1,18 @@
+---
+- name: Stop Gluster Web Docker Image
+  shell: |
+    docker stop $(docker ps | grep gluster | awk '{print $1}')
+  register: stop_docker_image
+
+
+- name: Remove Gluster Web Docker Image
+  shell: |
+    docker image rm -f $(docker images | awk '{print $3}' | sed 1d)
+  register: remove_docker_image
+
+
+- name: List Docker Processes
+  shell: |
+    docker ps
+  register: list_docker_ps
+
