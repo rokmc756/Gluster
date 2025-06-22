@@ -84,12 +84,26 @@ co9-node04      ansible_ssh_host=192.168.2.174
 $ make hosts r=init s=all
 ```
 
+### Uninitialize Linux Hosts to delete users and ssh keys in all hosts
+```
+$ make hosts r=uninit s=all
+```
+
+
 ### Enable Gluster Package Repositories and Install Packages
 ```
 $ make gluster r=enable s=repo
 
 $ make gluster r=install s=pkgs
 ```
+
+### Disable Gluster Package Repositories and Uninstall Packages
+```
+$ make gluster r=disable s=repo
+
+$ make gluster r=uninstall s=pkgs
+```
+
 
 ### Deploy Gluster
 #### 1) Start Gluster Server
