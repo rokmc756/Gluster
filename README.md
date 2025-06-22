@@ -4,7 +4,7 @@ The purpose of this is only for development environment not production.
 
 ### What is Gluster?
 Gluster is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.
-#### [ Advantages ]
+#### Advantages
 - Scales to several petabytes
 - Handles thousands of clients
 - POSIX compatible
@@ -16,21 +16,21 @@ Gluster is a scalable, distributed file system that aggregates disk storage reso
 - Open Source
 
 ### Gluster Architecture
-#### [ Scale Up and Out Diagram ]
+#### Scale Up and Out Diagram
 ![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster_diagram.png)
 #### Internal Flow
 ![alt text](https://raw.githubusercontent.com/rokmc756/gluster/main/roles/gluster/images/gluster-file-system-architecture.png)
 
 ### Gluster Volume Types
-#### [ Distributed ]
+#### Distributed
 Distributed volumes distribute files across the bricks in the volume where the requirement is to scale storage and the redundancy is either not important or is provided by other hardware/software layers.
-#### [ Replicated ]
+#### Replicated
 Replicated volumes replicate files across bricks in the volume where environments that high-availability and high-reliability are critical.
-#### [ Distributed Replicated ]
+#### Distributed Replicated
 Distributed replicated volumes distribute files across replicated bricks in the volume where environments that the requirement is to scale storage and high-reliability is critical. Distributed replicated volumes also offer improved read performance in most environments.
-#### [ Dispersed ]
+#### Dispersed
 Dispersed volumes are based on erasure codes, providing space-efficient protection against disk or server failures. It stores an encoded fragment of the original file to each brick in a way that only a subset of the fragments is needed to recover the original file. The number of bricks that can be missing without losing access to data is configured by the administrator on volume creation time.
-#### [ Distributed Dispersed ]
+#### Distributed Dispersed
 Distributed dispersed volumes distribute files across dispersed subvolumes. This has the same advantages of distribute replicate volumes, but using disperse to store the data into the bricks.
 
 ### Supported Platform and OS
@@ -55,7 +55,7 @@ $ brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Libr
 $ yum install ansible
 ```
 
-### [ Configure Inventory for Gluster ]
+### Configure Inventory for Gluster
 $ vi ansible-hosts-co9
 ```
 [all:vars]
@@ -91,7 +91,7 @@ $ make gluster r=enable s=repo
 $ make gluster r=install s=pkgs
 ```
 
-### [ Deploy Gluster ]
+### Deploy Gluster
 #### 1) Start Gluster Server
 ```
 $ make gluster r=start s=server
@@ -129,7 +129,7 @@ $ make gluster r=enable s=volume c=cquota
 ```
 
 
-### [ Destroy Gluster ]
+### Destroy Gluster
 #### 1) Disable Gluster Client Quota
 ```
 $ make gluster r=disable s=volume c=cquota
@@ -159,7 +159,7 @@ $ make gluster r=detach s=server c=peer
 $ make gluster r=stop s=server
 ```
 
-### [ Deploy NFS Ganesha Server ]
+### Deploy NFS Ganesha Server
 #### 1) Enable NFS Ganesha Package Repository
 ```
 $ make ganesha r=enable s=repo
@@ -178,7 +178,7 @@ $ make ganesha r=setup s=client c=nfs
 ```
 
 
-### [ Destroy NFS Ganesha Server ]
+### Destroy NFS Ganesha Server
 #### 1) Remove NFS Ganesha Client
 ```
 $ make ganesha r=remove s=client c=nfs
@@ -196,7 +196,7 @@ $ make ganesha r=uninstall s=pkgs
 $ make ganesha r=disable s=repo
 ```
 
-### [ Deploy Samba ]
+### Deploy Samba
 #### 1) Enable Gluster Samaba Package Repository
 ```
 $ make smb r=enable s=repo
@@ -238,7 +238,7 @@ $ make smb r=start   s=samba  c=service
 $ make smb r=setup   s=samba  c=client
 ```
 
-### [ Remove Samba on GlusterFS ]
+### Remove Samba on GlusterFS
 #### 1) Remove Gluster Samaba Cluster
 ```
 $ make smb r=remove  s=samba  c=client
@@ -287,7 +287,7 @@ $ make smb r=disable    s=repo
 volume create: vol_distributed: failed: The brick co9-node01:/glusterfs/distributed is being created in the root partition. It is recommended that you don't use the system's root partition for storage backend. Or use 'force' at the end of the command if you want to override this behavior.
 ```
 #### 2) Need to check the Quota works correctly for all Volume Modes
-#### 3)
+#### 3) Issues
 - https://github.com/gluster/glusterfs/issues/2347
 
 

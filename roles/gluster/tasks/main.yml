@@ -30,13 +30,13 @@
 
 
 - name: Install Gluster Web Interface
-  import_tasks: install-gluster-web.yml
+  import_tasks: web/install-gluster-web.yml
   tags: install, enable
   when: ( web is defined and web == true ) and inventory_hostname in groups['web']
 
 
 - name: Uninstall Gluster Web Interface
-  import_tasks: uninstall-gluster-web.yml
+  import_tasks: web/uninstall-gluster-web.yml
   tags: uninstall, disable
   when: ( web is defined and web == true ) and inventory_hostname in groups['web']
 

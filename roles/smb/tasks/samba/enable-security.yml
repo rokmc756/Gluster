@@ -12,6 +12,10 @@
   when: print_debug == true
 
 
+- name: Enable Firewalld
+  import_tasks: ext/enable-firewall.yml
+
+
 - name: Allow Samba Service
   shell: |
     firewall-cmd --add-service={samba,ctdb} --permanent
@@ -19,4 +23,9 @@
   register: allow_samba_service
 - debug: msg={{ allow_samba_service }}
   when: print_debug == true
+
+
+- name: Disable Firewalld
+  import_tasks: ext/disable-firewall.yml
+
 
